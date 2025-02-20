@@ -1,7 +1,15 @@
+import Header from "./components/Header"
+import Footer from "./components/Footer"
+import Layout from "./Layouts/Layout"
+
 
 const App = () => {
   return (
-    <div className="p-7">App</div>
+    <>
+      <Header />
+      <Layout />
+      <Footer />
+    </>
   )
 }
 
