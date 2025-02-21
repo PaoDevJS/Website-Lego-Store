@@ -4,9 +4,10 @@
 
 @theme {
     --color-primary: #E52020;
+    --color-dark: #100f0f
 }
 
 body {
-    font-family: "Poppins", serif;
+    /* font-family: "Poppins", serif; */
     font-size: 14px;
 }
