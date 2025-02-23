@@ -3,11 +3,17 @@ import App from '../App'
 import LayoutLoginAndRegister from '../Layouts/LayoutLoginAndRegister'
 import Login from '../pages/Login'
 import Register from '../pages/Register'
+import Cart from '../pages/Cart'
+import Home from '../pages/Home'
 
 const router = createBrowserRouter([{
     path: "/",
     element: <App />,
     children: [
+        {
+            path: "/",
+            element: <Home />
+        },
         {
             path: "/customer",
             element: <LayoutLoginAndRegister />,
@@ -21,6 +27,10 @@ const router = createBrowserRouter([{
                     element: <Register />
                 },
             ]
+        },
+        {
+            path: "/cart",
+            element: <Cart />
         }
     ]
 }])

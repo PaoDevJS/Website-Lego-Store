@@ -24,9 +24,9 @@ const Header = () => {
 
           {/* Login/Register */}
           <div className="2xl:w-[20%] lg:w-[30%] justify-end flex items-center gap-7">
-            <button>
-              <Link>
-                <FaShopify size={20}/>
+            <button> 
+              <Link to={"/cart"}>
+                <FaShopify size={25}/>
               </Link>
             </button>
             <button>
