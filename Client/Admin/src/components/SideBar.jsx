@@ -1,41 +1,78 @@
-// react icons
-import { TbLayoutDashboardFilled } from "react-icons/tb"
-import { RiLogoutCircleRLine } from "react-icons/ri"
+import { Link, useLocation } from "react-router-dom";
 
-// 
-import { Link } from "react-router-dom"
+// React Icons
+import { FaChartPie, FaListOl } from "react-icons/fa";
+import { FaUsers } from "react-icons/fa6";
 
 const SideBar = () => {
-  const MenuSideBar = [
-    {id: 1, title: "Tổng quan", path: "/", icon: <TbLayoutDashboardFilled size={20} />},
-    {id: 2, title: "Phân loại", path: "/category", icon: <TbLayoutDashboardFilled size={20} />},
-    {id: 3, title: "Nhà cung cấp", path: "/", icon: <TbLayoutDashboardFilled size={20} />},
-    {id: 4, title: "Sản phẩm", path: "/", icon: <TbLayoutDashboardFilled size={20} />},
-    {id: 7, title: "Khách hàng", path: "/", icon: <TbLayoutDashboardFilled size={20} />}
-  ]
+  const isListSideBar = [
+    { title: "Tổng quan", icons: <FaChartPie size={23} />, path: "/" },
+    {
+      title: "Quản lý danh mục",
+      icons: <FaListOl size={23} />,
+      path: "/danh-muc/danh-sach-danh-muc",
+    },
+    {
+      title: "Quản lý thương hiệu",
+      icons: "",
+      path: "/thuong-hieu/danh-sach-thuong-hieu",
+    },
+    {
+      title: "Quản lý sản phẩm",
+      icons: "",
+      path: "/san-pham/danh-sach-san-pham",
+    },
+    {
+      title: "Quản lý đơn hàng",
+      icons: "",
+      path: "/don-hang/danh-sach-don-hang",
+    },
+    {
+      title: "Quản lý khách hàng",
+      icons: <FaUsers size={23} />,
+      path: "khach-hang/danh-sach-khach-hang",
+    }
+  ];
+  const location = useLocation().pathname;
+  const path = location.split("/")[1];
 
   return (
-    <div className="w-[25%] h-full shadow-lg rounded-md overflow-hidden py-4 px-7 bg-white"> 
-      <ul className="border-b-2 border-orange-100 flex flex-col gap-3 pb-4">
-        {
-          MenuSideBar.map( item => {
-            return(
-              <Link to={item.path} key={item.id}>
-                <li className="flex items-center gap-2 p-2 rounded text-red-500 hover:bg-red-400 hover:text-white transition-all duration-300 ease-in">
-                  {item.icon}
-                  <span className="font-[700]">{item.title}</span>
-                </li>
-              </Link>
-            )
-          })
-        }
-      </ul>
-      <button className="w-full p-2 flex gap-2 my-4 rounded-md text-red-500 hover:bg-red-400 hover:text-white">
-        <RiLogoutCircleRLine size={20} />
-        <span className="font-[700]">Logout</span>
-      </button>
-    </div>
-  )
-}
+    <div className="fixed z-50 bg-white w-[20%] left-0 top-0 bottom-0 py-5 px-10 shadow-lg shadow-gray-300">
+      <div className="flex flex-col gap-10">
+        {/* information account*/}
+          <div className="Flex gap-5 py-5 border-b-2 border-gray-300">
+            <div className="border rounded-md py-5 px-10">
 
-export default SideBar
+            </div>
+            <div>
+              <h2 className="font-[600] text-16">Admin Panel</h2>
+              <p className="text-gray-600">Admin</p>
+            </div>
+          </div>
+
+        {/* List SideBar */}
+        <div>
+          <ul className="flex flex-col gap-5">
+            {isListSideBar.map((item, index) => {
+              return (
+                <Link to={item.path}>
+                  <li
+                    key={index}
+                    className={`Flex gap-3 py-3 px-7 rounded-md hover:bg-red-600 hover:text-white transition-all duration-300 ease-in-out ${
+                      path === item.path.split("/")[1] ? "bg-red-600 text-white" : "text-black bg-white"
+                    }`}
+                  >
+                    {item.icons}
+                    <h3 className="text-16 font-[600]">{item.title}</h3>
+                  </li>
+                </Link>
+              );
+            })}
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default SideBar;

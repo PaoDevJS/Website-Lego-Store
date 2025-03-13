@@ -1,12 +1,28 @@
-import { useState } from "react"
-import LayOut from "./layout/LayOut"
+import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
+import Login from "./pages/Login"
+import Layout from "./Layout/Layout"
 
 const App = () => {
-  const [currentUser, setCurrentUser] = useState(false)
+  const [currentUser, setCurrentUser] = useState(true)
+  const navigate = useNavigate()
+
+  {
+    useEffect(() => {
+      const path = () => {
+        currentUser ? navigate("/") : 
+        (
+          navigate("/login")
+        )
+      }
+      path()
+    }, [currentUser, navigate])
+  }
+
   return (
     <>
       {
-        currentUser? "" : <LayOut />
+        currentUser ? <Layout /> : <Login />
       }
     </>
   )

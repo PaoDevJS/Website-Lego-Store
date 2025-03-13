@@ -1,21 +1,36 @@
 import { Link } from "react-router-dom"
+import Navbar from "./Navbar"
+import { useContext } from "react"
+import { AppContext } from "../Context/ThemeContext"
 
 // React icons
 import { FaUser, FaSearch, FaShopify } from "react-icons/fa"
-
+import { CgMenuRound } from "react-icons/cg"
+import Search from "./Search"
+import Hero from "./Hero"
 
 const Header = () => {
+  const {setOpenMenu, setSearch} = useContext(AppContext)
+
   return (
-    <header className="py-4 px-7 shadow-md">
+    <header className="py-4 px-7 lg:px-10 shadow-md">
       <div className="container m-auto">
         <div className="flex items-center justify-between">
-          {/* Search */}
-          <form className="2xl:w-[20%] lg:w-[30%] hidden lg:block">
-            <div className="border-b border-gray-500 gap-4 flex items-center p-3">
-              <FaSearch size={20} className="text-gray-500"/>
-              <input type="text" placeholder="Bạn đang cần tìm sản phẩm gì?" className="w-full outline-none placeholder:text-[16px] placeholder:text-gray-600 placeholder:font-[500]"/>
-            </div>
-          </form>
+          <div className="2xl:w-[20%] lg:w-[35%]">
+            {/* Menu */}
+            <button onClick={() => setOpenMenu(true)}>
+              <CgMenuRound size={35} className="block lg:hidden cursor-pointer text-gray-700"/>
+            </button>
+            <Navbar />
+
+            {/* Search */}
+            <form className="hidden lg:block">
+              <div className="gap-4 flex items-center h-full p-2 border-b border-gray-500">
+                <FaSearch size={20} className="text-gray-500"/>
+                <input type="text" placeholder="Bạn đang cần tìm sản phẩm gì?" className="w-full outline-none placeholder:text-[16px] placeholder:text-gray-600 placeholder:font-[500]"/>
+              </div>
+            </form>
+          </div>
 
           {/* Logo */}
           <Link to="/">
@@ -24,16 +39,26 @@ const Header = () => {
 
           {/* Login/Register */}
           <div className="2xl:w-[20%] lg:w-[30%] justify-end flex items-center gap-7">
-            <button> 
+            <button className="relative group"> 
               <Link to={"/cart"}>
                 <FaShopify size={25}/>
               </Link>
+              <p className="absolute group-hover:block hidden min-w-[100px] rounded bg-white py-2 left-[50%] top-[35px] translate-x-[-50%] border">Giỏ hàng</p>
             </button>
-            <button>
+            <button className="lg:block hidden relative group">
               <Link to="/customer/account/login">
-                <FaUser size={20}/>
+                <FaUser size={23}/>
               </Link>
+              <p className="absolute group-hover:block hidden min-w-[100px] rounded bg-white py-2 left-[30%] top-[35px] translate-x-[-50%] border">Đăng nhập</p>
             </button>
+
+            <div className="lg:hidden block">
+              <button onClick={() => setSearch(true)} className="cursor-pointer relative group">
+                <FaSearch size={23}/>
+                <p className="absolute group-hover:block hidden min-w-[100px] rounded bg-white py-2 left-[50%] top-[35px] translate-x-[-50%] border">Tìm kiếm</p>
+              </button>
+              <Search />
+            </div>
           </div>
         </div>
       </div>
