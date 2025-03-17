@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 
 // React Icons
-import { FaChartPie, FaListOl } from "react-icons/fa";
+import { FaChartPie, FaListOl, FaShippingFast } from "react-icons/fa";
 import { FaUsers } from "react-icons/fa6";
 
 const SideBar = () => {
@@ -24,7 +24,7 @@ const SideBar = () => {
     },
     {
       title: "Quản lý đơn hàng",
-      icons: "",
+      icons: <FaShippingFast size={23} />,
       path: "/don-hang/danh-sach-don-hang",
     },
     {
@@ -37,7 +37,7 @@ const SideBar = () => {
   const path = location.split("/")[1];
 
   return (
-    <div className="fixed z-50 bg-white w-[20%] left-0 top-0 bottom-0 py-5 px-10 shadow-lg shadow-gray-300">
+    <div className="fixed z-50 bg-white w-[22%] left-0 top-0 bottom-0 py-5 px-10 shadow-lg shadow-gray-300">
       <div className="flex flex-col gap-10">
         {/* information account*/}
           <div className="Flex gap-5 py-5 border-b-2 border-gray-300">
@@ -55,9 +55,9 @@ const SideBar = () => {
           <ul className="flex flex-col gap-5">
             {isListSideBar.map((item, index) => {
               return (
-                <Link to={item.path}>
+                <Link to={item.path} 
+                key={index}>
                   <li
-                    key={index}
                     className={`Flex gap-3 py-3 px-7 rounded-md hover:bg-red-600 hover:text-white transition-all duration-300 ease-in-out ${
                       path === item.path.split("/")[1] ? "bg-red-600 text-white" : "text-black bg-white"
                     }`}

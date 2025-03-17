@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 // React Icons
 import { TiArrowLeftThick } from "react-icons/ti";
@@ -8,17 +10,38 @@ const AddBrand = () => {
   const [name, setName] = useState("");
   const [err, setErr] = useState(false);
   const [mess, setMess] = useState("");
+  const urlApiPostCreateBrand = "http://localhost:8000/api/brand/add-brand";
 
+  const FetchApiPostCreateBrand = async () => {
+    try {
+      const decode = await axios.post(urlApiPostCreateBrand, { name });
+      const result = decode.data;
+      setName("");
+      toast.success(result.message);
+    } catch (error) {
+      const err = error.response.data;
+      if (err.message === "Thương hiệu này đã tồn tại.") {
+        setErr(true);
+        setMess(err.message);
+        return true;
+      }
+      setErr(false);
+      setMess("");
+      toast.error(err.message);
+      return false;
+    }
+  };
   // check name category
   const checkNameCategory = () => {
     if (!name) {
       setErr(true);
       setMess("Vui lòng không để trống trường này.");
-      return;
+      return true;
     }
-
     setErr(false);
     setMess("");
+    FetchApiPostCreateBrand();
+    return false;
   };
 
   const handleSubmitAddBrand = (e) => {

@@ -1,10 +1,38 @@
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 // React Icons
 import { FaListOl, FaPlus, FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 
 const ListCategories = () => {
+  const [categories, setCategories] = useState([])
+  const UrlApiGetAllCategories = "http://localhost:8000/api/category/get-all-categories"
+  const UrlApiDeleteCategory = "http://localhost:8000/api/category/delete-item-category"
+  const FetchApiGetAllCategories = async () => {
+    try {
+      const decode = await axios.get(UrlApiGetAllCategories)
+      setCategories(decode.data.categories)
+    } catch (error) {
+      console.log(error.response.data)
+    }
+  }
+  useEffect(() => {
+    FetchApiGetAllCategories()
+  }, [setCategories])
+
+  const handleSubmitDeleteItemCategory = async (id) => {
+    try {
+      const decode = await axios.delete(`${UrlApiDeleteCategory}/${id}`)
+      FetchApiGetAllCategories()
+      toast.success(decode.data.message)
+    } catch (error) {
+      console.log(error.response.data)
+    }
+  }
+
   return (
     <div className=" w-full h-full px-10 py-5">
       {/* create Category */}
@@ -43,22 +71,29 @@ const ListCategories = () => {
             </tr>
           </thead>
           <tbody>
-            <tr className="even:bg-[#fdfdfd] odd:bg-[#e7e7e9]">
-              <td className="py-3 text-center">#1</td>
-              <td className="py-3 text-center">#1</td>
-              <td className="py-3 text-center">
-                <div>
-                  <Link to={`/danh-muc/cap-nhat-danh-muc/:id`}>
-                    <button className="rounded p-1 bg-green-300 text-green-600 cursor-pointer hover:text-white hover:bg-green-600 transition-all duration-300 ease-in">
-                      <FaEdit size={20}/>
-                    </button>
-                  </Link>
-                  <button className="rounded p-1 bg-red-300 text-red-600 hover:text-white hover:bg-red-600 cursor-pointer ml-5 transition-all duration-300 ease-in">
-                    <MdDelete size={20}/>
-                  </button>
-                </div>
-              </td>
-            </tr>
+            {
+              categories? 
+                (
+                  categories?.map((item, index) => (
+                    <tr key={index} className="even:bg-[#fdfdfd] odd:bg-[#e7e7e9]">
+                      <td className="py-3 text-center">#{index + 1}</td>
+                      <td className="py-3 text-center">{item.name}</td>
+                      <td className="py-3 text-center">
+                        <div>
+                          <Link to={`/danh-muc/cap-nhat-danh-muc/${item._id}`}>
+                            <button className="rounded p-1 bg-green-300 text-green-600 cursor-pointer hover:text-white hover:bg-green-600 transition-all duration-300 ease-in">
+                              <FaEdit size={20}/>
+                            </button>
+                          </Link>
+                          <button onClick={() => handleSubmitDeleteItemCategory(item._id)} className="rounded p-1 bg-red-300 text-red-600 hover:text-white hover:bg-red-600 cursor-pointer ml-5 transition-all duration-300 ease-in">
+                            <MdDelete size={20}/>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : ""
+            }
           </tbody>
         </table>
       </div>

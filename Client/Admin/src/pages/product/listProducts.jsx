@@ -1,11 +1,42 @@
 import React from 'react'
 import { Link } from "react-router-dom";
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 // React Icons
 import { FaListOl, FaPlus, FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import { toast } from 'react-toastify';
 
-const listProducts = () => {
+const ListProducts = () => {
+  const [products, setProducts] = useState([])
+  const fetchApiGetAllProducts = "http://localhost:8000/api/product/get-all-products"
+  const fetchApiDeleteItemProduct = "http://localhost:8000/api/product/delete-item-product"
+
+  const getAllProducts = async () => {
+    try {
+      const decode = await axios.get(fetchApiGetAllProducts)
+      setProducts(decode.data.products)
+    } catch (error) {
+      console.log(error.response.data)
+    }
+  }
+
+  useEffect(() => {
+    getAllProducts()
+  }, [])
+
+  const handleSubmitDeleteItemProduct = async (id) => {
+    try {
+      const decode = await axios.delete(`${fetchApiDeleteItemProduct}/${id}`)
+      fetchApiGetAllProducts()
+      toast.success(decode.data.message)
+    } catch (error) {
+      console.log(error.response.data)
+    }
+  }
+  console.log(products)
+
   return (
     <div className=" w-full h-full px-10 py-5">
       {/* create Category */}
@@ -50,28 +81,34 @@ const listProducts = () => {
             </tr>
           </thead>
           <tbody>
-            <tr className="even:bg-[#fdfdfd] odd:bg-[#e7e7e9]">
-              <td className="py-3 text-center">#1</td>
-              <td className="py-3 text-center">#1</td>
-              <td className="py-3 text-center">#1</td>
-              <td className="py-3 text-center">#1</td>
-              <td className="py-3 text-center">#1</td>
-              <td className="py-3 text-center">#1</td>
-              <td className="py-3 text-center">#1</td>
-              <td className="py-3 text-center">#1</td>
-              <td className="py-3 text-center">
-                <div>
-                  <Link to={`/san-pham/cap-nhat-san-pham/:id`}>
-                    <button className="rounded p-1 bg-green-300 text-green-600 cursor-pointer hover:text-white hover:bg-green-600 transition-all duration-300 ease-in">
-                      <FaEdit size={20}/>
-                    </button>
-                  </Link>
-                  <button className="rounded p-1 bg-red-300 text-red-600 hover:text-white hover:bg-red-600 cursor-pointer ml-5 transition-all duration-300 ease-in">
-                    <MdDelete size={20}/>
-                  </button>
-                </div>
-              </td>
-            </tr>
+            {
+              products?.map((item, index) => (
+                <tr key={index} className="even:bg-[#fdfdfd] odd:bg-[#e7e7e9]">
+                  <td className="py-3 px-5 text-center">#{index + 1}</td>
+                  <td className="py-3 px-5 text-center">
+                    <img src={`http://localhost:8000/${item.images[0]}`} alt="" className='w-[70px] h-[70px] object-cover m-auto rounded-md'/>
+                  </td>
+                  <td className="py-3 px-5 text-center">{item.name}</td>
+                  <td className="py-3 px-5 text-center">{item.brands}</td>
+                  <td className="py-3 px-5 text-center">{item.categories}</td>
+                  <td className="py-3 px-5 text-center">{item.price}</td>
+                  <td className="py-3 px-5 text-center">{item.stock}</td>
+                  <td className="py-3 px-5 text-center">{item.status}</td>
+                  <td className="py-3 px-5 text-center">
+                    <div>
+                      <Link to={`/san-pham/cap-nhat-san-pham/${item._id}`}>
+                        <button className="rounded p-1 bg-green-300 text-green-600 cursor-pointer hover:text-white hover:bg-green-600 transition-all duration-300 ease-in">
+                          <FaEdit size={20}/>
+                        </button>
+                      </Link>
+                      <button onClick={() => handleSubmitDeleteItemProduct(item._id)} className="rounded p-1 bg-red-300 text-red-600 hover:text-white hover:bg-red-600 cursor-pointer ml-5 transition-all duration-300 ease-in">
+                        <MdDelete size={20}/>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            }
           </tbody>
         </table>
       </div>
@@ -79,4 +116,4 @@ const listProducts = () => {
   )
 }
 
-export default listProducts
+export default ListProducts

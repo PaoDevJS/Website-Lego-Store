@@ -6,10 +6,10 @@ import TopBar from "../components/TopBar"
 const LayOut = () => {
   return (
     <div className="w-full h-[100vh] flex">
-        <div className="w-[20%] h-full">
+        <div className="w-[22%] h-full">
             <SideBar />
         </div>
-        <div className="w-[80%] h-full">
+        <div className="w-[78%] h-full">
             <div className="w-full h-[10%]">
                 {/* TopBar */}
                 <TopBar />

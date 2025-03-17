@@ -10,6 +10,9 @@ import Login from "../pages/Login"
 import LayoutProduct from "../Layout/LayoutProduct"
 import ListProduct from "../pages/product/listProducts"
 import CreateProduct from "../pages/product/createProduct"
+import UpdateCategory from "../pages/Category/updateCategory"
+import UpdateBrand from "../pages/Brand/updateBrand"
+import UpdateProduct from "../pages/product/updateProduct"
 
 const routes = createBrowserRouter([
     {
@@ -27,6 +30,10 @@ const routes = createBrowserRouter([
                     {
                         path: "/danh-muc/them-danh-muc-moi",
                         element: <AddCategory />
+                    },
+                    {
+                        path: "/danh-muc/cap-nhat-danh-muc/:id",
+                        element: <UpdateCategory />
                     }
                 ]
             },
@@ -41,9 +48,13 @@ const routes = createBrowserRouter([
                     {
                         path: "/thuong-hieu/them-thuong-hieu-moi",
                         element: <AddBrand />
+                    },
+                    {
+                        path: "/thuong-hieu/cap-nhat-thuong-hieu/:id",
+                        element: <UpdateBrand />
                     }
                 ]
-            },,
+            },    
             {
                 path: "/san-pham",
                 element: <LayoutProduct />,
@@ -55,7 +66,11 @@ const routes = createBrowserRouter([
                     {
                         path: "/san-pham/them-san-pham-moi",
                         element: <CreateProduct />
-                    }
+                    },
+                    {
+                        path: "/san-pham/cap-nhat-san-pham/:id",
+                        element: <UpdateProduct />
+                    },
                 ]
             },
             {

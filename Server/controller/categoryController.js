@@ -1,4 +1,4 @@
-import categoryModel from "../model/category.model";
+import categoryModel from "../model/category.model.js";
 
 const CreateCategory = async (req, res) => {
     try {
@@ -35,6 +35,70 @@ const CreateCategory = async (req, res) => {
     }
 }
 
+const GetAllCategories = async (req, res) => {
+    try {
+        const categories = await categoryModel.find({})
+        return res.status(200).json({
+            success: true,
+            categories
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        })
+    }
+}
+
+const deleteItemCategory = async (req, res) => {
+    try {
+        const id = req.params.id
+        await categoryModel.findByIdAndDelete(id)
+        return res.status(200).json({
+            message: "Xóa danh mục thành công."
+        })
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        })
+    }
+}
+
+const getItemCategory = async (req, res) => {
+    try {
+        const id = req.params.id
+        const itemCategory = await categoryModel.findById(id)
+        return res.status(200).json({
+            itemCategory
+        })
+    } catch (error) {
+        return res.status(500).json({
+            message : error.message
+        })
+    }
+} 
+
+const updateItemCategory = async (req, res) => {
+    try {
+        const id = req.params.id
+        const { name } = req.body
+        const itemCategory = await categoryModel.findById(id)
+        itemCategory.name = name || itemCategory.name
+        await itemCategory.save()
+        return res.status(200).json({
+            message: "Cập nhật danh mục thành công."
+        })
+    } catch (error) {
+        return res.status(500).json({
+            message : error.message
+        })
+    }
+}
+
 export default {
-    CreateCategory
+    CreateCategory,
+    GetAllCategories,
+    deleteItemCategory,
+    getItemCategory, 
+    updateItemCategory
 }
