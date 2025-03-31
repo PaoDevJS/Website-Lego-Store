@@ -4,11 +4,14 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 // React Icons
-import { FaListOl, FaPlus, FaEdit } from "react-icons/fa";
+import { FaPlus, FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import { AiOutlineCopyright } from "react-icons/ai";
+import { FaSearch } from "react-icons/fa";
 
 const ListBrands = () => {
   const [brands, setBrands] = useState([])
+    const [search, setSearch] = useState("");
   const urlApiGetAllBrands = "http://localhost:8000/api/brand/get-all-brands"
   const urlApiDeleteItemBrand = "http://localhost:8000/api/brand/delete-item-brand"
 
@@ -42,7 +45,7 @@ const ListBrands = () => {
         <div className="flex items-center justify-between">
           <div className="Flex gap-3">
             <div className="border border-gray-300 text-gray-500 p-5 rounded-md">
-              <FaListOl size={30} />
+              <AiOutlineCopyright size={30} />
             </div>
             <div>
               <h2 className="text-18 font-[600] text-gray-700">Thương hiệu</h2>
@@ -64,6 +67,15 @@ const ListBrands = () => {
 
       {/* table list categories */}
       <div className="w-full mt-10 bg-white p-10 rounded-md">
+        <div className="mb-10 border border-gray-300 w-[50%] py-2 px-4 rounded-md flex items-center gap-4">
+                  <FaSearch size={20} className="text-gray-500" />
+                  <input
+                    type="text"
+                    value={search}
+                    onChange={(vail) => setSearch(vail.target.value)}
+                    className="w-full outline-none"
+                  />
+                </div>
         <table className="table-fixed w-full rounded-md overflow-hidden">
           <thead>
             <tr className="bg-red-500 text-white uppercase">
@@ -76,7 +88,7 @@ const ListBrands = () => {
             {
               brands? 
               (
-                brands?.map((item, index) => (
+                brands?.filter(vail => vail.name.toLowerCase().includes(search.toLowerCase())).map((item, index) => (
                   <tr key={index} className="even:bg-[#fdfdfd] odd:bg-[#e7e7e9]">
                     <td className="py-3 text-center">#{index + 1}</td>
                     <td className="py-3 text-center">{item.name}</td>

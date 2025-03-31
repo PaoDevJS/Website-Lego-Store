@@ -9,6 +9,10 @@ import { IoClose } from "react-icons/io5";
 
 const FormDataUpdateItemProduct = () => {
   const message = "Vui lòng không để trống trường này.";
+  const formatVND = new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND"
+  })
   // check name product
   const [name, setName] = useState("");
   const [errName, setErrName] = useState(false);
@@ -76,9 +80,6 @@ const FormDataUpdateItemProduct = () => {
   const [category, setCategory] = useState([]);
   const [errCategory, setErrCategory] = useState(false);
   const [messCategory, setMessCategory] = useState("");
-  const handleRemoveItemCategory = (key) => {
-    setCategory(category.filter((vail, index) => index != key));
-  };
   const checkCategoryProduct = () => {
     if (category.length < 0) {
       setErrCategory(true);
@@ -113,6 +114,7 @@ const FormDataUpdateItemProduct = () => {
   const handleRemoveItemImage = (key) => {
     setImage(image.filter((vail, index) => index != key));
   };
+  console.log(image)
 
   const checkImageProduct = () => {
     if (image.length < 0) {
@@ -127,76 +129,64 @@ const FormDataUpdateItemProduct = () => {
 
   // fetch api get danh muc & thuong hieu
   const [categories, setCategories] = useState([]);
-  const UrlApiGetAllCategories =
-    "http://localhost:8000/api/category/get-all-categories";
   const [brands, setBrands] = useState([]);
+  const path = useLocation().pathname;
+  const id = path.split("/")[3];
+  const UrlApiGetAllCategories = `http://localhost:8000/api/category/get-all-categories`;
   const urlApiGetAllBrands = "http://localhost:8000/api/brand/get-all-brands";
-  const path = useLocation().pathname
-  const id = path.split("/")[3]
-  const urlApiGetItemProduct = "http://localhost:8000/api/brand/get-item-product";
-
-  const fetchApiGetAllCategories = async () => {
-    try {
-      const decode = await axios.get(UrlApiGetAllCategories);
-      setCategories(decode.data.categories);
-    } catch (error) {
-      console.log(error.response.data);
-    }
-  };
-
-  const fetchApiGetItemProduct = async () => {
-    try {
-      const decode = await axios.get(`${urlApiGetItemProduct}/${id}`);
-      const product = decode.data.itemProduct
-      setName(product.name)
-      setDesc(product.desc)
-      setPrice(product.price)
-      setStock(product.stock)
-      setBrand(product.brands)
-      setCategory(product.categories)
-      setImage(product.images)
-    } catch (error) {
-      console.log(error.response);
-    }
-  }
-
-  const fetchApiGetAllBrands = async () => {
-    try {
-      const decode = await axios.get(urlApiGetAllBrands);
-      setBrands(decode.data.brands);
-    } catch (error) {
-      console.log(error.response);
-    }
-  };
+  const urlApiGetItemProduct =
+    "http://localhost:8000/api/brand/get-item-product";
 
   useEffect(() => {
-    fetchApiGetAllCategories();
-    fetchApiGetAllBrands();
-    fetchApiGetItemProduct()
-  }, []);
+    const fetchData = async () => {
+      try {
+        const [categoriesRes, brandsRes, product] = await Promise.all([
+          axios.get(`${UrlApiGetAllCategories}`),
+          axios.get(`${urlApiGetAllBrands}`),
+          axios.get(`${urlApiGetItemProduct}/${id}`),
+        ]);
+        setCategories(categoriesRes.data.categories);
+        setBrands(brandsRes.data.brands);
+
+        const itemProduct = product.data.itemProduct;
+        setName(itemProduct.name);
+        setDesc(itemProduct.desc);
+        setPrice(itemProduct.price);
+        setStock(itemProduct.stock);
+        setBrand(itemProduct.brands);
+        setCategory(itemProduct.categories);
+        setImage(itemProduct.images);
+      } catch (error) {
+        console.log(error.response?.data || "Lỗi không xác định");
+      }
+    };
+    fetchData();
+  }, [id]);
+  console.log(image)
 
   // Send to server
   const fetchApiPutItemProduct =
     "http://localhost:8000/api/product/update-item-product";
-    const navigate = useNavigate()
+  const navigate = useNavigate();
   const myFormData = new FormData();
   myFormData.append("name", name);
   myFormData.append("desc", desc);
   myFormData.append("price", price);
   myFormData.append("stock", stock);
-  for (let i = 0; i < category.length; i++) {
-    myFormData.append("categories", category[i]);
-  }
-  myFormData.append("brands", brand)
+  myFormData.append("categories", category);
+  myFormData.append("brands", brand);
   for (let i = 0; i < image.length; i++) {
-    myFormData.append("upload_files_product", image[i]);
+    myFormData.append("update_upload_files_product", image[i]);
   }
 
   const postCreateProduct = async () => {
     try {
-      const decode = await axios.put(`${fetchApiPutItemProduct}/${id}`, myFormData);
-      navigate("/san-pham/danh-sach-san-pham")
-      toast.success(decode.data.message);
+      const decode = await axios.put(
+        `${fetchApiPutItemProduct}/${id}`,
+        myFormData
+      );
+      navigate("/san-pham/danh-sach-san-pham");
+      toast.success(decode.data);
     } catch (error) {
       const err = error.response.data;
       if (err.message === "Vui lòng không để trống trường này.") return true;
@@ -222,7 +212,7 @@ const FormDataUpdateItemProduct = () => {
     <div className="mt-10 w-[60%] m-auto">
       <form>
         <h1 className="text-18 font-[700] text-center text-gray-500 uppercase">
-          Thêm sản phẩm mới
+          Chỉnh sửa sản phẩm mới
         </h1>
         <div className="Flex gap-5 mt-10">
           <label
@@ -231,7 +221,7 @@ const FormDataUpdateItemProduct = () => {
           >
             Tên sản phẩm:
           </label>
-          <div className="w-[80%] relative">
+          <div className="min-w-[80%] relative">
             <input
               type="text"
               value={name}
@@ -264,7 +254,7 @@ const FormDataUpdateItemProduct = () => {
           >
             Mô tả sản phẩm:
           </label>
-          <div className="w-[80%] relative">
+          <div className="min-w-[80%] relative">
             <textarea
               value={desc}
               onChange={(vail) => setDesc(vail.target.value)}
@@ -296,7 +286,7 @@ const FormDataUpdateItemProduct = () => {
           >
             Giá sản phẩm:
           </label>
-          <div className="w-[80%] relative">
+          <div className="min-w-[80%] relative">
             <input
               value={price}
               id="name"
@@ -328,7 +318,7 @@ const FormDataUpdateItemProduct = () => {
           >
             Số lượng sản phẩm:
           </label>
-          <div className="w-[80%] relative">
+          <div className="min-w-[80%] relative">
             <input
               value={stock}
               onChange={(vail) => setStock(vail.target.value.trim())}
@@ -361,33 +351,18 @@ const FormDataUpdateItemProduct = () => {
             Danh mục sản phẩm:
           </label>
           <div
-            className={`w-[80%] relative border py-3 px-5 rounded-md ${
+            className={`min-w-[80%] relative border py-3 px-5 rounded-md ${
               errCategory ? "border-red-500" : "border-gray-300"
             }`}
           >
             <div className="flex items-center justify-between gap-5">
-              <ul className="w-[70%] flex items-center gap-5 overflow-hidden">
-                {category.map((item, index) => (
-                  <li
-                    key={index}
-                    className="flex items-center gap-3 border border-gray-300 rounded-md p-2"
-                  >
-                    {item}
-                    <IoClose
-                      onClick={() => handleRemoveItemCategory(index)}
-                      size={18}
-                      className="cursor-pointer"
-                    />
-                  </li>
-                ))}
-              </ul>
+              <div className="w-[70%] overflow-hidden">
+                <h5>{category}</h5>
+              </div>
               <select
                 name="category"
                 onChange={(vail) =>
-                  setCategory((current) => [
-                    ...current,
-                    vail.target.value.trim(),
-                  ])
+                  setCategory(vail.target.value.trim())
                 }
                 id="category"
                 className="w-[30%] border border-gray-300 outline-none p-2 rounded-md"
@@ -419,19 +394,15 @@ const FormDataUpdateItemProduct = () => {
           >
             Thương hiệu sản phẩm:
           </label>
-          <div className="w-[80%] relative border border-gray-300 py-3 px-5 rounded-md">
+          <div className="min-w-[80%] relative border border-gray-300 py-3 px-5 rounded-md">
             <div className="flex items-center justify-between gap-5">
               <div className="w-[70%] overflow-hidden">
-                <h5>
-                  {brand}
-                </h5>
+                <h5>{brand}</h5>
               </div>
               <select
                 name="category"
                 id="category"
-                onChange={(vail) =>
-                  setBrand(vail.target.value.trim())
-                }
+                onChange={(vail) => setBrand(vail.target.value.trim())}
                 className="w-[30%] border border-gray-300 outline-none p-2 rounded-md"
               >
                 <option>Chọn Thương hiệu</option>
@@ -457,7 +428,7 @@ const FormDataUpdateItemProduct = () => {
           >
             Ảnh:
           </label>
-          <div className="w-[80%] relative border border-gray-300 py-3 px-5 rounded-md">
+          <div className="min-w-[80%] relative border border-gray-300 py-3 px-5 rounded-md">
             <div className="flex items-center justify-between gap-5">
               <ul className="w-[90%] flex items-center gap-5 overflow-hidden">
                 {image?.map((item, index) => (
@@ -466,9 +437,9 @@ const FormDataUpdateItemProduct = () => {
                     className="flex items-center gap-3 border border-gray-300 rounded-md p-2"
                   >
                     <img
-                      src={`http://localhost:8000/${item}`}
+                      src={`${item === File? item : `http://localhost:8000/${item}`}`}
                       alt=""
-                      className="w-[40px] h-[40px]"
+                      className="min-w-[40px] h-[40px]"
                     />
                     <IoClose
                       onClick={() => handleRemoveItemImage(index)}
@@ -488,7 +459,7 @@ const FormDataUpdateItemProduct = () => {
                   id="upload"
                   hidden
                   onChange={(vail) =>
-                    setImage((prev) => [...prev, vail.target.files[0]])
+                    setImage((prev) => [...prev, URL.createObjectURL(vail.target.files[0])])
                   }
                 />
               </div>
@@ -509,7 +480,7 @@ const FormDataUpdateItemProduct = () => {
             onClick={handlePostCreateProduct}
             className="mt-8 bg-red-600 text-16 block m-auto w-[30%] rounded-md py-3 cursor-pointer text-white font-[700] hover:opacity-80 transition-all duration-200 ease-linear"
           >
-            Thêm
+            Cập nhật
           </button>
         </div>
       </form>

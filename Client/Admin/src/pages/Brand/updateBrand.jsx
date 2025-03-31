@@ -87,7 +87,7 @@ const UpdateBrand = () => {
             <div className="Flex mt-10">
               <label
                 htmlFor="name"
-                className="w-[25%] text-16 font-[500] text-gray-600"
+                className="min-w-[25%] text-16 font-[500] text-gray-600"
               >
                 Tên thương hiệu:
               </label>

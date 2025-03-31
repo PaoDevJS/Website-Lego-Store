@@ -1,55 +1,51 @@
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useState, useContext } from "react";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { AppContext } from "../Context/ThemeContext";
 
 //  React icons
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 
 const Login = () => {
+  const { setCurrentUser } = useContext(AppContext)
   const [eye, setEye] = useState(false);
-  const [errEmail, setErrEmail] = useState(false);
-  const [errPassword, setErrPassword] = useState(false);
-  const [err, setErr] = useState(false);
-  const [mess, setMess] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({
+    email: "",
+    Password: ""
+  })
+  // console.log(currentUser)
+  const fetchApiSignIn = `http://localhost:8000/api/auth/user/sign-in`
+  const navigate = useNavigate()
 
-//   Check email
-  const CheckEmail = () => {
-    const re = /^\S+@\S+\.\S+$/
-    if(!re.test(email)) {
-        setErrEmail(true)
-        setMess("...")
-        return
-    }
-
-    if(!email) {
-        setErrEmail(true)
-        setMess("Vui lòng không để trống trường này.")
-        return
-    }
-
-    setErrEmail(false)
-    setMess("")
-  }
-
-//   check password
-  const CheckPassword = () => {
-    if(!password) {
-        setErrPassword(true)
-        setMess("Vui lòng không để trống trường này.")
-        return
-    }
-
-    setErrPassword(false)
-    setMess("")
+  const handleChangeFormData = vail => {
+    setFormData(prev => ({...prev, [vail.target.name]: vail.target.value}))
   }
 
 //   submit sign in
   const handleSubmitSignIn = async (e) => {
     e.preventDefault()
-
-    CheckEmail()
-    CheckPassword()
+    try {
+      const decoded = await axios.post(fetchApiSignIn, formData)
+      setCurrentUser({
+        user: decoded.data.user,
+        isUser: true
+      })
+      navigate("/")
+      toast.success(decoded.data.mess)
+      localStorage.setItem("tokenSignIN", decoded.data.token)
+      setFormData({
+        email: "",
+        Password: ""
+      })
+    } catch (error) {
+      const err = error.response?.data
+      setFormData({
+        email: formData.email,
+        Password: ""
+      })
+      toast.error(err)
+    }
   }
 
   return (
@@ -71,53 +67,55 @@ const Login = () => {
             </Link>
           </p>
         </div>
-        {/*  */}
-        <div className={`${err? "block mt-10" : "hidden"} border border-red-400 p-4 rounded-md bg-red-100`}>
-            <h1 className="text-center text-red-600">{mess}</h1>
-        </div>
 
         {/* form login */}
         <div className="mt-10">
-          <form className="flex flex-col gap-7">
-            <h5 className="text-[18px]">Hãy nhập thông tin của bạn</h5>
-            <div className={`w-full py-3 px-5 rounded-md relative ${errEmail? "border border-red-600" : "border border-gray-300"}`}>
-              <input
-                type="text"
-                value={email}
-                onChange={(vail) => setEmail(vail.target.value)}
-                placeholder="Nhập email"
-                className="outline-none w-full placeholder:font-[500]"
-              />
-              <small className={`absolute w-full left-2 text-red-600 bottom-[-20px] ${errEmail? "block" : "hidden"}`}>{mess}</small>
-            </div>
-            <div className={`w-full py-3 px-5 rounded-md flex items-center gap-4 relative ${errPassword? "border border-red-600" : "border border-gray-300"}`}>
-              <input
-                type={`${eye ? "text" : "password"}`}
-                value={password}
-                onChange={(vail) => setPassword(vail.target.value)}
-                placeholder="Nhập Mật khẩu"
-                className="outline-none w-full placeholder:font-[500]"
-              />
-              {eye ? (
-                <FaRegEye
-                  size={20}
-                  onClick={() => setEye(false)}
-                  className="cursor-pointer text-gray-400 hover:text-dark"
+          <form>
+            <div className="flex flex-col gap-5">
+              <h5 className="text-[18px]">Hãy nhập thông tin của bạn</h5>
+              <div className={`w-full py-3 px-5 rounded-md relative border border-gray-300`}>
+                <input
+                  type="email"
+                  value={formData.email}
+                  onChange={handleChangeFormData}
+                  name="email"
+                  placeholder="Nhập email"
+                  className="outline-none w-full placeholder:font-[500]"
+                  required
                 />
-              ) : (
-                <FaRegEyeSlash
-                  onClick={() => setEye(true)}
-                  size={20}
-                  className="cursor-pointer text-gray-400 hover:text-dark"
+              </div>
+              <div className={`w-full py-3 px-5 rounded-md flex items-center gap-4 relative border border-gray-300`}>
+                <input
+                  type={`${eye ? "text" : "password"}`}
+                  value={formData.Password}
+                  name="Password"
+                  onChange={handleChangeFormData}
+                  placeholder="Nhập Mật khẩu"
+                  className="outline-none w-full placeholder:font-[500]"
+                  required
                 />
-              )}
-                <small className={`absolute w-full left-2 text-red-600 bottom-[-20px] ${errPassword? "block" : "hidden"}`}>{mess}</small>
+                {eye ? (
+                  <FaRegEye
+                    size={20}
+                    onClick={() => setEye(false)}
+                    className="cursor-pointer text-gray-400 hover:text-dark"
+                  />
+                ) : (
+                  <FaRegEyeSlash
+                    onClick={() => setEye(true)}
+                    size={20}
+                    className="cursor-pointer text-gray-400 hover:text-dark"
+                  />
+                )}
+              </div>
+              <div>
+                <Link to={"/customer/account/forget-password"}>
+                  <p className="underline hover:text-red-600">Quên mật khẩu?</p>
+                </Link>
+              </div>
             </div>
-            <div className="mt-3">
-              <Link>
-                <p className="underline mb-7">Quên mật khẩu?</p>
-              </Link>
-              <button onClick={handleSubmitSignIn} className="w-full bg-red-700 text-white py-3 rounded-full text-lg uppercase font-bold cursor-pointer hover:bg-red-700/80 transition duration-200 ease-in">
+            <div className="mt-10">
+              <button onClick={handleSubmitSignIn} className="w-full bg-red-700 text-white py-3 rounded-md text-lg uppercase font-bold cursor-pointer hover:bg-red-700/80 transition duration-200 ease-in">
                 Đăng nhập
               </button>
             </div>

@@ -15,7 +15,11 @@ main.use(express.static(path.join(__dirname, "public/images")));
 main.use(express.urlencoded({ extended: true }))
 main.use(express.json())
 main.use(cookieParser())
-main.use(cors())
+main.use(cors({
+    origin: ["http://localhost:5173", "http://localhost:5174"], // Đổi thành domain frontend
+    methods: ["POST", "GET", "PUT", "DELETE"],
+    credentials: true, // Cho phép gửi cookies
+  }))
 
 
 configServer(main)

@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -10,32 +10,24 @@ const UpdateCategory = () => {
   const [name, setName] = useState("");
   const [err, setErr] = useState(false);
   const [mess, setMess] = useState("");
-  const urlApiPostUpdateCategory = `http://localhost:8000/api/category/update-item-category/`;
-  const urlApiPostGetItemCategory = `http://localhost:8000/api/category/get-item-category/`;
-  const path = useLocation().pathname
-  const id = path.split("/")[3]
   const navigate = useNavigate()
+  const id = useLocation().pathname.split("/")[3]
+  const urlApiPostUpdateCategory = `http://localhost:8000/api/category/update-item-category/${id}`;
+  const urlApiPostGetItemCategory = `http://localhost:8000/api/category/get-item-category/`;
 
-  const UpdateCategory = async () => {
+  const UpdateCategory = useCallback(async () => {
     try {
-      const decode = await axios.put(`${urlApiPostUpdateCategory}${id}`, { name });
-      const result = decode.data;
+      const { data } = await axios.put(urlApiPostUpdateCategory, { name });
       setName("");
-      toast.success(result.message);
-      navigate("/danh-muc/danh-sach-danh-muc")
+      toast.success(data.message);
+      navigate("/danh-muc/danh-sach-danh-muc");
     } catch (error) {
-      const err = error.response.data;
-      if (err.message === "Danh mục này đã tồn tại.") {
-        setErr(true);
-        setMess(err.message);
-        return true;
-      }
-      setErr(false);
-      setMess("");
-      toast.error(err.message);
-      return false;
+      const errorMessage = error.response?.data?.message || "Có lỗi xảy ra!";
+      setErr(true);
+      setMess(errorMessage);
+      toast.error(errorMessage);
     }
-  };
+  }, [name, navigate, urlApiPostUpdateCategory]);
 
   // check name category
   const checkNameCategory = () => {
@@ -56,7 +48,7 @@ const UpdateCategory = () => {
         const decode = await axios.get(`${urlApiPostGetItemCategory}${id}`)
         setName(decode.data.itemCategory.name)
       } catch (error) {
-        console.log(error.response.data)
+        console.log(error.response?.data)
       }
     }
 
@@ -88,7 +80,7 @@ const UpdateCategory = () => {
             <div className="Flex mt-10">
               <label
                 htmlFor="name"
-                className="w-[20%] text-16 font-[500] text-gray-600"
+                className="min-w-[20%] text-16 font-[500] text-gray-600"
               >
                 Tên danh mục:
               </label>

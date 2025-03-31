@@ -6,7 +6,7 @@ const ProductRouter = (main, route) => {
     route.get("/get-all-products", productController.getAllProducts)
     route.delete("/delete-item-product/:id", productController.deleteItemProduct)
     route.get("/get-item-product/:id", productController.getItemProduct)
-    route.put("/update-item-product/:id", uploadFile.array("upload_files_product", 30), productController.updateItemProduct)
+    route.put("/update-item-product/:id", uploadFile.array("update_upload_files_product", 30), productController.updateItemProduct)
 
     main.use('/api/product', route)
 }

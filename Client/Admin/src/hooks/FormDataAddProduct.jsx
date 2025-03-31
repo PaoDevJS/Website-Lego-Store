@@ -12,6 +12,10 @@ const FormDataAddProduct = () => {
   const [name, setName] = useState("");
   const [errName, setErrName] = useState(false);
   const [messName, setMessName] = useState("");
+  const formatVND = new Intl.NumberFormat("vi-VN", {
+    currency: "VND",
+    style: "currency"
+  })
 
   const checkNameProduct = () => {
     if (!name) {
@@ -72,12 +76,9 @@ const FormDataAddProduct = () => {
   };
 
   // check category product
-  const [category, setCategory] = useState([]);
+  const [category, setCategory] = useState("");
   const [errCategory, setErrCategory] = useState(false);
   const [messCategory, setMessCategory] = useState("");
-  const handleRemoveItemCategory = (key) => {
-    setCategory(category.filter((vail, index) => index != key));
-  };
   const checkCategoryProduct = () => {
     if (category.length < 0) {
       setErrCategory(true);
@@ -126,44 +127,38 @@ const FormDataAddProduct = () => {
 
   // fetch api get danh muc & thuong hieu
   const [categories, setCategories] = useState([]);
+  const [brands, setBrands] = useState([]);
   const UrlApiGetAllCategories =
     "http://localhost:8000/api/category/get-all-categories";
-  const [brands, setBrands] = useState([]);
   const urlApiGetAllBrands = "http://localhost:8000/api/brand/get-all-brands";
-  const fetchApiGetAllCategories = async () => {
-    try {
-      const decode = await axios.get(UrlApiGetAllCategories);
-      setCategories(decode.data.categories);
-    } catch (error) {
-      console.log(error.response.data);
-    }
-  };
-  const fetchApiGetAllBrands = async () => {
-    try {
-      const decode = await axios.get(urlApiGetAllBrands);
-      setBrands(decode.data.brands);
-    } catch (error) {
-      console.log(error.response);
-    }
-  };
 
   useEffect(() => {
-    fetchApiGetAllCategories();
-    fetchApiGetAllBrands();
+    const fetchData = async () => {
+      try {
+        const [categoriesRes, brandsRes] = await Promise.all([
+          axios.get(UrlApiGetAllCategories),
+          axios.get(urlApiGetAllBrands),
+        ]);
+        setCategories(categoriesRes.data.categories);
+        setBrands(brandsRes.data.brands);
+      } catch (error) {
+        console.log(error.response?.data || "Lỗi không xác định");
+      }
+    };
+    fetchData();
   }, []);
 
   // Send to server
   const fetchApiPostCreateProduct =
     "http://localhost:8000/api/product/add-product";
+
   const myFormData = new FormData();
   myFormData.append("name", name);
   myFormData.append("desc", desc);
   myFormData.append("price", price);
   myFormData.append("stock", stock);
-  for (let i = 0; i < category.length; i++) {
-    myFormData.append("categories", category[i]);
-  }
-  myFormData.append("brands", brand)
+  myFormData.append("categories", category);
+  myFormData.append("brands", brand);
   for (let i = 0; i < image.length; i++) {
     myFormData.append("upload_files_product", image[i]);
   }
@@ -213,7 +208,7 @@ const FormDataAddProduct = () => {
           >
             Tên sản phẩm:
           </label>
-          <div className="w-[80%] relative">
+          <div className="min-w-[80%] relative">
             <input
               type="text"
               value={name}
@@ -246,7 +241,7 @@ const FormDataAddProduct = () => {
           >
             Mô tả sản phẩm:
           </label>
-          <div className="w-[80%] relative">
+          <div className="min-w-[80%] relative">
             <textarea
               value={desc}
               onChange={(vail) => setDesc(vail.target.value)}
@@ -278,7 +273,7 @@ const FormDataAddProduct = () => {
           >
             Giá sản phẩm:
           </label>
-          <div className="w-[80%] relative">
+          <div className="min-w-[80%] relative">
             <input
               value={price}
               id="name"
@@ -310,7 +305,7 @@ const FormDataAddProduct = () => {
           >
             Số lượng sản phẩm:
           </label>
-          <div className="w-[80%] relative">
+          <div className="min-w-[80%] relative">
             <input
               value={stock}
               onChange={(vail) => setStock(vail.target.value.trim())}
@@ -335,7 +330,7 @@ const FormDataAddProduct = () => {
           </div>
         </div>
         {/* Category */}
-        <div className="flex gap-5 mt-10">
+        <div className="flex items-center gap-5 mt-10">
           <label
             htmlFor="category"
             className="min-w-[20%] mt-1 text-16 font-[500] text-gray-600"
@@ -343,34 +338,17 @@ const FormDataAddProduct = () => {
             Danh mục sản phẩm:
           </label>
           <div
-            className={`w-[80%] relative border py-3 px-5 rounded-md ${
+            className={`min-w-[80%] relative border py-3 px-5 rounded-md ${
               errCategory ? "border-red-500" : "border-gray-300"
             }`}
           >
             <div className="flex items-center justify-between gap-5">
-              <ul className="w-[70%] flex items-center gap-5 overflow-hidden">
-                {category.map((item, index) => (
-                  <li
-                    key={index}
-                    className="flex items-center gap-3 border border-gray-300 rounded-md p-2"
-                  >
-                    {item}
-                    <IoClose
-                      onClick={() => handleRemoveItemCategory(index)}
-                      size={18}
-                      className="cursor-pointer"
-                    />
-                  </li>
-                ))}
-              </ul>
+              <div className="w-[70%] overflow-hidden">
+                <h5>{category}</h5>
+              </div>
               <select
                 name="category"
-                onChange={(vail) =>
-                  setCategory((current) => [
-                    ...current,
-                    vail.target.value.trim(),
-                  ])
-                }
+                onChange={(vail) => setCategory(vail.target.value.trim())}
                 id="category"
                 className="w-[30%] border border-gray-300 outline-none p-2 rounded-md"
               >
@@ -394,26 +372,22 @@ const FormDataAddProduct = () => {
           </div>
         </div>
         {/* brand */}
-        <div className="flex gap-5 mt-10">
+        <div className="flex items-center gap-5 mt-10">
           <label
             htmlFor="name"
             className="min-w-[20%] mt-1 text-16 font-[500] text-gray-600"
           >
             Thương hiệu sản phẩm:
           </label>
-          <div className="w-[80%] relative border border-gray-300 py-3 px-5 rounded-md">
+          <div className="min-w-[80%] relative border border-gray-300 py-3 px-5 rounded-md">
             <div className="flex items-center justify-between gap-5">
               <div className="w-[70%] overflow-hidden">
-                <h5>
-                  {brand}
-                </h5>
+                <h5>{brand}</h5>
               </div>
               <select
                 name="category"
                 id="category"
-                onChange={(vail) =>
-                  setBrand(vail.target.value.trim())
-                }
+                onChange={(vail) => setBrand(vail.target.value.trim())}
                 className="w-[30%] border border-gray-300 outline-none p-2 rounded-md"
               >
                 <option>Chọn Thương hiệu</option>
@@ -432,15 +406,15 @@ const FormDataAddProduct = () => {
           </div>
         </div>
         {/* images */}
-        <div className="flex gap-5 mt-10">
+        <div className="flex items-center gap-5 mt-10">
           <label
             htmlFor="name"
             className="min-w-[20%] mt-1 text-16 font-[500] text-gray-600"
           >
             Ảnh:
           </label>
-          <div className="w-[80%] relative border border-gray-300 py-3 px-5 rounded-md">
-            <div className="flex items-center justify-between gap-5">
+          <div className="min-w-[80%] relative border border-gray-300 p-3 rounded-md">
+            <div className="flex items-center justify-between gap-5 h-[50px]">
               <ul className="w-[90%] flex items-center gap-5 overflow-hidden">
                 {image?.map((item, index) => (
                   <li
@@ -450,7 +424,7 @@ const FormDataAddProduct = () => {
                     <img
                       src={URL.createObjectURL(item)}
                       alt=""
-                      className="w-[40px] h-[40px]"
+                      className="min-w-[40px] h-[40px]"
                     />
                     <IoClose
                       onClick={() => handleRemoveItemImage(index)}

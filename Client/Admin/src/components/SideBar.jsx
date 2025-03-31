@@ -1,8 +1,11 @@
 import { Link, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 // React Icons
 import { FaChartPie, FaListOl, FaShippingFast } from "react-icons/fa";
 import { FaUsers } from "react-icons/fa6";
+import { BsBox2HeartFill } from "react-icons/bs";
+import { AiOutlineCopyright } from "react-icons/ai";
 
 const SideBar = () => {
   const isListSideBar = [
@@ -14,12 +17,12 @@ const SideBar = () => {
     },
     {
       title: "Quản lý thương hiệu",
-      icons: "",
+      icons: <AiOutlineCopyright size={27} />,
       path: "/thuong-hieu/danh-sach-thuong-hieu",
     },
     {
       title: "Quản lý sản phẩm",
-      icons: "",
+      icons: <BsBox2HeartFill size={23} />,
       path: "/san-pham/danh-sach-san-pham",
     },
     {
@@ -30,9 +33,10 @@ const SideBar = () => {
     {
       title: "Quản lý khách hàng",
       icons: <FaUsers size={23} />,
-      path: "khach-hang/danh-sach-khach-hang",
+      path: "/khach-hang/danh-sach-khach-hang",
     }
   ];
+  const user = useSelector(state => state.User.user)
   const location = useLocation().pathname;
   const path = location.split("/")[1];
 
@@ -41,12 +45,10 @@ const SideBar = () => {
       <div className="flex flex-col gap-10">
         {/* information account*/}
           <div className="Flex gap-5 py-5 border-b-2 border-gray-300">
-            <div className="border rounded-md py-5 px-10">
-
-            </div>
+            <img src="https://i.pinimg.com/originals/c6/e5/65/c6e56503cfdd87da299f72dc416023d4.jpg" alt="avatar" className="w-[50px] h-[50px] rounded-full object-cover"/>
             <div>
-              <h2 className="font-[600] text-16">Admin Panel</h2>
-              <p className="text-gray-600">Admin</p>
+              <h2 className="font-[600] text-16">{user.firstName + " " + user.lastName}</h2>
+              <p className="text-gray-600">{user.role}</p>
             </div>
           </div>
 

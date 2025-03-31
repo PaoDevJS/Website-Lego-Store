@@ -6,7 +6,6 @@ import { TiArrowLeftThick } from "react-icons/ti"
 
 const Search = () => {
     const {search, setSearch} = useContext(AppContext)
-    console.log(search)
 
   return (
     <div className={`lg:hidden fixed ${search? "top-0 right-0 bottom-0 w-full h-full" : "top-0 right-[-100%] w-[100%] h-full"} bg-white transition-all duration-300 ease-linear py-4 px-10`}>

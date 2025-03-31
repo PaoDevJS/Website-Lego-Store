@@ -7,13 +7,13 @@ import { AppContext } from "../Context/ThemeContext"
 import { FaUser, FaSearch, FaShopify } from "react-icons/fa"
 import { CgMenuRound } from "react-icons/cg"
 import Search from "./Search"
-import Hero from "./Hero"
+// import Hero from "./Hero"
 
 const Header = () => {
-  const {setOpenMenu, setSearch} = useContext(AppContext)
+  const { setOpenMenu, setSearch, currentUser } = useContext(AppContext)
 
   return (
-    <header className="py-4 px-7 lg:px-10 shadow-md">
+    <header className="py-4 px-7 lg:px-10 shadow-md bg-white">
       <div className="container m-auto">
         <div className="flex items-center justify-between">
           <div className="2xl:w-[20%] lg:w-[35%]">
@@ -21,7 +21,6 @@ const Header = () => {
             <button onClick={() => setOpenMenu(true)}>
               <CgMenuRound size={35} className="block lg:hidden cursor-pointer text-gray-700"/>
             </button>
-            <Navbar />
 
             {/* Search */}
             <form className="hidden lg:block">
@@ -32,7 +31,7 @@ const Header = () => {
             </form>
           </div>
 
-          {/* Logo */}
+          {/* Logo  */}
           <Link to="/">
             <h1 className="py-3 px-5 rounded-md bg-gradient-to-l to-gray-400 from-red-600 text-3xl uppercase font-bold text-white"> LegoWorld<span className="text-lg">Store</span> </h1>
           </Link>
@@ -45,12 +44,20 @@ const Header = () => {
               </Link>
               <p className="absolute group-hover:block hidden min-w-[100px] rounded bg-white py-2 left-[50%] top-[35px] translate-x-[-50%] border">Giỏ hàng</p>
             </button>
-            <button className="lg:block hidden relative group">
-              <Link to="/customer/account/login">
-                <FaUser size={23}/>
-              </Link>
-              <p className="absolute group-hover:block hidden min-w-[100px] rounded bg-white py-2 left-[30%] top-[35px] translate-x-[-50%] border">Đăng nhập</p>
-            </button>
+            {
+              currentUser.isUser === false ? (
+                <button className="lg:block hidden relative group">
+                  <Link to="/customer/account/login">
+                    <FaUser size={23}/>
+                  </Link>
+                  <p className="absolute group-hover:block hidden min-w-[100px] rounded bg-white py-2 left-[30%] top-[35px] translate-x-[-50%] border">Đăng nhập</p>
+                </button>
+              ) : (
+                <div className="lg:block hidden">
+                  <img src={currentUser.user.userDetailId.image} alt="avatar" className="w-[30px] h-[30px] rounded-full cursor-pointer"/>
+                </div>
+              )
+            }
 
             <div className="lg:hidden block">
               <button onClick={() => setSearch(true)} className="cursor-pointer relative group">
@@ -61,6 +68,7 @@ const Header = () => {
             </div>
           </div>
         </div>
+        <Navbar />
       </div>
     </header>
   )

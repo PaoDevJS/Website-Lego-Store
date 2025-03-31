@@ -1,37 +1,42 @@
 import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
 // React Icons
 import { FaListOl, FaPlus, FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import { FaSearch } from "react-icons/fa";
 
 const ListCategories = () => {
-  const [categories, setCategories] = useState([])
-  const UrlApiGetAllCategories = "http://localhost:8000/api/category/get-all-categories"
-  const UrlApiDeleteCategory = "http://localhost:8000/api/category/delete-item-category"
-  const FetchApiGetAllCategories = async () => {
+  const [categories, setCategories] = useState([]);
+  const [search, setSearch] = useState("");
+  const UrlApiGetAllCategories =
+    "http://localhost:8000/api/category/get-all-categories";
+  const UrlApiDeleteCategory =
+    "http://localhost:8000/api/category/delete-item-category";
+  const FetchApiGetAllCategories = useCallback(async () => {
     try {
-      const decode = await axios.get(UrlApiGetAllCategories)
-      setCategories(decode.data.categories)
+      const decode = await axios.get(UrlApiGetAllCategories);
+      setCategories(decode.data?.categories);
     } catch (error) {
-      console.log(error.response.data)
+      console.log(error.response?.data?.message);
     }
-  }
+  }, []);
+
   useEffect(() => {
-    FetchApiGetAllCategories()
-  }, [setCategories])
+    FetchApiGetAllCategories();
+  }, [FetchApiGetAllCategories, setCategories]);
 
   const handleSubmitDeleteItemCategory = async (id) => {
     try {
-      const decode = await axios.delete(`${UrlApiDeleteCategory}/${id}`)
-      FetchApiGetAllCategories()
-      toast.success(decode.data.message)
+      const decode = await axios.delete(`${UrlApiDeleteCategory}/${id}`);
+      FetchApiGetAllCategories();
+      toast.success(decode.data?.message);
     } catch (error) {
-      console.log(error.response.data)
+      console.log(error.response?.data?.message);
     }
-  }
+  };
 
   return (
     <div className=" w-full h-full px-10 py-5">
@@ -62,6 +67,15 @@ const ListCategories = () => {
 
       {/* table list categories */}
       <div className="w-full mt-10 bg-white p-10 rounded-md">
+        <div className="mb-10 border border-gray-300 w-[50%] py-2 px-4 rounded-md flex items-center gap-4">
+          <FaSearch size={20} className="text-gray-500" />
+          <input
+            type="text"
+            value={search}
+            onChange={(vail) => setSearch(vail.target.value)}
+            className="w-full outline-none"
+          />
+        </div>
         <table className="table-fixed w-full rounded-md overflow-hidden">
           <thead>
             <tr className="bg-red-500 text-white uppercase">
@@ -71,29 +85,38 @@ const ListCategories = () => {
             </tr>
           </thead>
           <tbody>
-            {
-              categories? 
-                (
-                  categories?.map((item, index) => (
-                    <tr key={index} className="even:bg-[#fdfdfd] odd:bg-[#e7e7e9]">
+            {categories
+              ? categories
+                  ?.filter((vail) =>
+                    vail.name.toLowerCase().includes(search.toLowerCase())
+                  )
+                  .map((item, index) => (
+                    <tr
+                      key={index}
+                      className="even:bg-[#fdfdfd] odd:bg-[#e7e7e9]"
+                    >
                       <td className="py-3 text-center">#{index + 1}</td>
                       <td className="py-3 text-center">{item.name}</td>
                       <td className="py-3 text-center">
                         <div>
                           <Link to={`/danh-muc/cap-nhat-danh-muc/${item._id}`}>
                             <button className="rounded p-1 bg-green-300 text-green-600 cursor-pointer hover:text-white hover:bg-green-600 transition-all duration-300 ease-in">
-                              <FaEdit size={20}/>
+                              <FaEdit size={20} />
                             </button>
                           </Link>
-                          <button onClick={() => handleSubmitDeleteItemCategory(item._id)} className="rounded p-1 bg-red-300 text-red-600 hover:text-white hover:bg-red-600 cursor-pointer ml-5 transition-all duration-300 ease-in">
-                            <MdDelete size={20}/>
+                          <button
+                            onClick={() =>
+                              handleSubmitDeleteItemCategory(item._id)
+                            }
+                            className="rounded p-1 bg-red-300 text-red-600 hover:text-white hover:bg-red-600 cursor-pointer ml-5 transition-all duration-300 ease-in"
+                          >
+                            <MdDelete size={20} />
                           </button>
                         </div>
                       </td>
                     </tr>
                   ))
-                ) : ""
-            }
+              : ""}
           </tbody>
         </table>
       </div>

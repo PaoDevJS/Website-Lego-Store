@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { type } from "os";
 
 const ProductSchema = new mongoose.Schema({
     name: {
@@ -22,12 +23,13 @@ const ProductSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    images: [],
-    categories: [],
-    status: {
+    images: {
+        type: Array,
+        required: true
+    },
+    categories: {
         type: String,
-        default: "Hiện",
-        enum: ["Ẩn", "Hiện"]
+        required: true
     }
 }, { timestamps: true })
 

@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import axios from "axios";
+import { toast } from "react-toastify"
 
 //  React icons
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
@@ -7,137 +9,37 @@ import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 const Register = () => {
   const [eye, setEye] = useState(false);
   const [eyeConfirm, setEyeConfirm] = useState(false);
-  const [err, setErr] = useState(false);
-  const [errFirstName, setErrFirstName] = useState(false);
-  const [errLastName, setErrLastName] = useState(false);
-  const [errEmail, setErrEmail] = useState(false);
-  const [errPhone, setErrPhone] = useState(false);
-  const [errPassword, setErrPassword] = useState(false);
-  const [errConfirmPassword, setErrConfirmPassword] = useState(false);
-  const [messEmail, setMessEmail] = useState("");
-  const [messPhone, setMessPhone] = useState("");
-  const [messPassword, setMessPassword] = useState("");
-  const [messConfirmPassword, setMessConfirmPassword] = useState("");
-  const [mess, setMess] = useState("");
-  const [messLastName, setMessLastName] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [email, setEmail] = useState("");
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    phone: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const fetchApiRegisterUser = 'http://localhost:8000/api/auth/user/sign-up'
 
-  const message = "Vui lòng không để trống trường này."
-
-  // check first name
-  const CheckFirstName = () => {
-    if (!firstName) {
-      setErrFirstName(true);
-      setMess(message);
-      return;
-    }
-
-    setErrFirstName(false)
-    setMess("")
+  const handleChangeFormData = (vail) => {
+    setFormData((prev) => ({ ...prev, [vail.target.name]: vail.target.value }));
   };
 
-  // Check last name
-  const CheckLastName = () => {
-    if (!lastName) {
-      setErrLastName(true);
-      setMessLastName(message);
-      return;
+  const handleSubmitRegister = async (e) => {
+    e.preventDefault()
+    try {
+      const decoded = await axios.post(fetchApiRegisterUser, formData)
+      console.log(decoded.data)
+      setFormData({
+        firstName: "",
+        lastName: "",
+        phone: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+      })
+      toast.success(decoded.data)
+    } catch (error) {
+      toast.error(error.response.data)
     }
-
-    setErrLastName(false)
-    setMessLastName("")
-  }
-
-  // Check email 
-  const CheckEmail = () => {
-    if(!email) {
-        setErrEmail(true)
-        setMessEmail(message)
-        return
-    }
-
-    const re = /^\S+@\S+\.\S+$/
-    if(!re.test(email)) {
-        setErrEmail(true)
-        setMessEmail("Email không hợp lệ, vui lòng nhập lại.")
-        return
-    }
-
-
-    setErrEmail(false)
-    setMessEmail("")
-  }
-
-  // Check phone number
-
-  const CheckPhoneNumber = () => {
-    if (!phone) {
-      setErrPhone(true);
-      setMessPhone(message);
-      return;
-    }
-
-    const relex = /^[0-9]+$/
-    if(!relex.test(phone)) {
-      setErrPhone(true)
-      setMessPhone("Số điện thoại không hợp lệ, vui lòng nhập lại.")
-      return
-    }
-    
-
-    setErrPhone(false)
-    setMessPhone("")
-  }
-
-  // Check password
-  const CheckPassword = () => {
-    if(!password) {
-      setErrPassword(true)
-      setMessPassword(message)
-      return
-    }
-
-    setErrPassword(false)
-    setMessPassword("")
-  }
-
-  // check confirm password
-  const CheckConfirmPassword = () => {
-    if(!confirmPassword) {
-      setErrConfirmPassword(true)
-      setMessConfirmPassword(message)
-      return
-    }
-    setErrConfirmPassword(false)
-    setMessConfirmPassword("")
-  }
-
-  // const CheckPasswordAndConfirmPassword = () => {
-
-  //   if(password != confirmPassword) {
-  //     setErrConfirmPassword(true)
-  //     setMess("Vui lòng không để trống trường này.")
-  //     return
-  //   }
-
-  //   setErrConfirmPassword(false)
-  //   setMess("")
-  // }
-
-  const handleSubmitRegister = (e) => {
-    e.preventDefault();
-
-    CheckConfirmPassword();
-    CheckPassword();
-    CheckEmail();
-    CheckFirstName();
-    CheckLastName();
-    CheckPhoneNumber();
   };
   return (
     <div className="w-full h-[90vh] flex items-center justify-center">
@@ -152,63 +54,76 @@ const Register = () => {
 
           {/* Enter FirstName & LastName */}
           <div className="flex items-center justify-between">
-            <div className={`w-[45%] py-3 px-4 rounded-md border relative border-gray-300 ${errFirstName? "border border-red-600" : "border border-gray-300"}`}>
+            <div
+              className={`w-[45%] py-3 px-4 rounded-md border relative border-gray-300`}
+            >
               <input
                 type="text"
                 name="firstName"
-                value={firstName}
-                onChange={vail => setFirstName(vail.target.value)}
                 placeholder="Nhập Họ"
+                value={formData.firstName}
+                onChange={handleChangeFormData}
                 className="outline-none w-full placeholder:font-[500]"
+                required
               />
-              <small className={`${errFirstName? "block" : "hidden"} absolute bottom-[-20px] left-1 w-[200px] text-red-600`}>{mess}</small>
             </div>
-            <div className={`w-[45%] py-3 px-4 rounded-md relative ${errLastName? "border border-red-600" : "border border-gray-300"}`}>
+            <div
+              className={`w-[45%] py-3 px-4 rounded-md relative border border-gray-300`}
+            >
               <input
                 type="text"
                 name="lastName"
-                value={lastName}
-                onChange={vail => setLastName(vail.target.value)}
                 placeholder="Nhập tên"
+                value={formData.lastName}
+                onChange={handleChangeFormData}
                 className="outline-none w-full placeholder:font-[500]"
+                required
               />
-              <small className={`${errLastName? "block" : "hidden"} absolute bottom-[-20px] left-0 w-[200px] text-red-600`}>{messLastName}</small>
             </div>
           </div>
 
           {/* Enter email */}
-          <div className={`py-3 px-4 rounded-md relative ${errEmail? "border border-red-600" : "border border-gray-300"}`}>
+          <div
+            className={`py-3 px-4 rounded-md relative border border-gray-300`}
+          >
             <input
-              type="text"
+              type="email"
               name="email"
-              value={email}
-              onChange={vail => setEmail(vail.target.value)}
               placeholder="Nhập email"
+              value={formData.email}
+              onChange={handleChangeFormData}
               className="outline-none w-full placeholder:font-[500]"
+              required
             />
-            <small className={`${errEmail? "block" : "hidden"} absolute bottom-[-20px] left-1 w-[200px] text-red-600`}>{messEmail}</small>
           </div>
 
           {/* Enter phone number */}
-          <div className={`py-3 px-4 rounded-md relative ${errPhone? "border border-red-600" : "border border-gray-300"}`}>
+          <div
+            className={`py-3 px-4 rounded-md relative border border-gray-300`}
+          >
             <input
               type="text"
               placeholder="Nhập số điện thoại"
-              onChange={vail => setPhone(vail.target.value)}
+              name="phone"
+              value={formData.phone}
+              onChange={handleChangeFormData}
               className="outline-none w-full placeholder:font-[500]"
+              required
             />
-            <small className={`${errPhone? "block" : "hidden"} absolute bottom-[-20px] left-1 text-red-600`}>{messPhone}</small>
           </div>
 
           {/* Enter password */}
-          <div className={`py-3 px-4 rounded-md relative flex items-center gap-4 ${errPassword? "border border-red-600" : "border border-gray-300"}`}>
+          <div
+            className={`py-3 px-4 rounded-md relative flex items-center gap-4 border border-gray-300`}
+          >
             <input
               type={`${eye ? "text" : "password"}`}
               placeholder="Nhập mật khẩu"
               name="password"
-              value={password}
-              onChange={vail => setPassword(vail.target.value)}
+              value={formData.password}
+              onChange={handleChangeFormData}
               className="outline-none w-full placeholder:font-[500]"
+              required
             />
             {eye ? (
               <FaRegEye
@@ -223,18 +138,20 @@ const Register = () => {
                 className="cursor-pointer text-gray-400 hover:text-dark"
               />
             )}
-            <small className={`${errPassword? "block" : "hidden"} absolute bottom-[-20px] left-1 w-[200px] text-red-600`}>{messPassword}</small>
           </div>
 
           {/* Enter confirm password */}
-          <div className = {`py-3 px-4 rounded-md relative flex items-center gap-4 ${errConfirmPassword? "border border-red-600" : "border border-gray-300"}`}>
+          <div
+            className={`py-3 px-4 rounded-md relative flex items-center gap-4 border border-gray-300`}
+          >
             <input
-              type={`${eye ? "text" : "password"}`}
+              type={`${eyeConfirm ? "text" : "password"}`}
               placeholder="Nhập lại mật khẩu"
               name="confirmPassword"
-              value={confirmPassword}
-              onChange={vail => setConfirmPassword(vail.target.value)}
+              value={formData.confirmPassword}
+              onChange={handleChangeFormData}
               className="outline-none w-full placeholder:font-[500]"
+              required
             />
             {eyeConfirm ? (
               <FaRegEye
@@ -249,7 +166,6 @@ const Register = () => {
                 className="cursor-pointer text-gray-400 hover:text-dark"
               />
             )}
-            <small className={`${errConfirmPassword? "block" : "hidden"} absolute bottom-[-20px] left-1 w-[200px] text-red-600`}>{messConfirmPassword}</small>
           </div>
 
           {/* btn submit create account */}

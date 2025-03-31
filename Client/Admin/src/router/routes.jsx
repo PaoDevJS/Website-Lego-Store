@@ -13,12 +13,20 @@ import CreateProduct from "../pages/product/createProduct"
 import UpdateCategory from "../pages/Category/updateCategory"
 import UpdateBrand from "../pages/Brand/updateBrand"
 import UpdateProduct from "../pages/product/updateProduct"
+import ListCustomers from "../pages/Customer/ListCustomers"
+import LayoutCustomer from "../layout/LayoutCustomer"
+import ProductDetail from "../pages/product/productDetail"
+import Dashboard from "../pages/Dashboard"
 
 const routes = createBrowserRouter([
     {
         path: "/",
         element: <App />,
         children: [
+            {
+                path: "/",
+                element: <Dashboard />
+            },
             {
                 path: "/danh-muc",
                 element: <LayoutCategory />,
@@ -71,7 +79,25 @@ const routes = createBrowserRouter([
                         path: "/san-pham/cap-nhat-san-pham/:id",
                         element: <UpdateProduct />
                     },
+                    {
+                        path: "/san-pham/chi-tiet-san-pham/:id",
+                        element: <ProductDetail />
+                    },
                 ]
+            },
+            {
+                path: "/khach-hang",
+                element: <LayoutCustomer />,
+                children: [
+                    {
+                        path: "/khach-hang/danh-sach-khach-hang",
+                        element: <ListCustomers />
+                    },
+                    {
+
+                    }
+                ]
+
             },
             {
                 path: "/login",
