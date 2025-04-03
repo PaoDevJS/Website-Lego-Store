@@ -34,7 +34,7 @@ const RestPassword = () => {
 
     try {
       const result = await axios.post(
-        "http://localhost:8000/api/auth/rest-password",
+        "http://localhost:8080/api/auth/rest-password",
         {
           newPassword: formData.password,
           email,

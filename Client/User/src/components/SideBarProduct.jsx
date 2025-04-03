@@ -14,8 +14,8 @@ const SideBarProduct = () => {
   const { setSearchCategory, setSearchBrand } = useContext(AppContext);
 
   const fetchApiGetAllCategories =
-    "http://localhost:8000/api/category/get-all-categories";
-  const fetchApiGetAllBrands = "http://localhost:8000/api/brand/get-all-brands";
+    "http://localhost:8080/api/category/get-all-categories";
+  const fetchApiGetAllBrands = "http://localhost:8080/api/brand/get-all-brands";
 
   useEffect(() => {
     const FetchApiCategoriesAndBrands = async () => {

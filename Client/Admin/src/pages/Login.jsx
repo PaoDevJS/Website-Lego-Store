@@ -16,7 +16,7 @@ const Login = () => {
     Email: "",
     Password: ""
   })
-  const fetchApiSignInByAccountAdmin = "http://localhost:8000/api/auth/admin/sign-in"
+  const fetchApiSignInByAccountAdmin = "http://localhost:8080/api/auth/admin/sign-in"
 
   const handleChangeFormData = ( vail ) => {
     setFormData(prev => ({...prev, [vail.target.name]: vail.target.value}))
@@ -27,6 +27,7 @@ const Login = () => {
     try {
       const result = await axios.post(fetchApiSignInByAccountAdmin, formData)
       navigate("/")
+      localStorage.setItem("sign_in_admin", result.data.token)
       dispatch(successUser(result.data))
       toast.success(result.data.message)
     } catch (error) {

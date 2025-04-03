@@ -2,11 +2,10 @@ import Card from "../utils/Card";
 import axios from "axios";
 import { useEffect, useState, useContext } from "react";
 import { AppContext } from "../Context/ThemeContext";
-import { Link } from "react-router-dom";
 
 const AllItemProduct = () => {
   const fetchApiGetAllProducts =
-    "http://localhost:8000/api/product/get-all-products";
+    "http://localhost:8080/api/product/get-all-products";
   const [products, setProducts] = useState([]);
   const { searchBrand, searchCategory } = useContext(AppContext);
 

@@ -3,7 +3,7 @@ import connectionDB from "./db.js"
 
 
 const configServer = (main) => {
-    const port = process.env.PORT
+    const port = process.env.PORT || 8080
     connectionDB()
     router(main)
 

@@ -10,7 +10,7 @@ const AddCategory = () => {
   const [name, setName] = useState("");
   const [err, setErr] = useState(false);
   const [mess, setMess] = useState("");
-  const fetchApiPostCreateCategories = `http://localhost:8000/api/category/add-category`;
+  const fetchApiPostCreateCategories = `http://localhost:8080/api/category/add-category`;
 
   const PostCreateCategory = async () => {
     try {

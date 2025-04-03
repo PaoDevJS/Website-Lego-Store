@@ -12,8 +12,8 @@ import { FaSearch } from "react-icons/fa";
 const ListBrands = () => {
   const [brands, setBrands] = useState([])
     const [search, setSearch] = useState("");
-  const urlApiGetAllBrands = "http://localhost:8000/api/brand/get-all-brands"
-  const urlApiDeleteItemBrand = "http://localhost:8000/api/brand/delete-item-brand"
+  const urlApiGetAllBrands = "http://localhost:8080/api/brand/get-all-brands"
+  const urlApiDeleteItemBrand = "http://localhost:8080/api/brand/delete-item-brand"
 
   const FetchApiGetAllBrands = async () => {
     try {

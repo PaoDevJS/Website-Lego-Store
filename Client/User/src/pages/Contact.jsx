@@ -1,4 +1,4 @@
-import GoogleMapComponent from "../components/isGoogleMapComponent";
+// import GoogleMapComponent from "../components/isGoogleMapComponent";
 
 //  react icons
 import {

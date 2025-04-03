@@ -5,11 +5,12 @@ const authRouter = (main, route) => {
     // user
     route.post("/user/sign-up", authController.SignUpByAccountUser)
     route.post("/user/sign-in", authController.SignInByAccountUser)
+    route.delete("/delete-user/:id", authController.deleteUser)
     // admin
     route.post("/admin/sign-in", authController.SignInByAccountAdmin)
     route.post("/admin/sign-up", authController.SignUpByAccountAdmin)
     route.get("/admin/get-all-users", verifyTokenAdmin, authController.getAllUsers)
-    route.get("/get-user/:id", verifyToken, authController.getAllUsers)
+    route.get("/get-user/:id", authController.getUserById)
 
     route.post("/sign-out", authController.SignOut)
 

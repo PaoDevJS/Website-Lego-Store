@@ -16,7 +16,10 @@ const ThemeContext = ({ children }) => {
     carts: [],
     isCart: false,
   });
-  const [openCart, setOpenCart] = useState(false);
+  const [openCart, setOpenCart] = useState({
+    isOpen: false,
+    product: {}
+  });
 
   return (
     <AppContext.Provider

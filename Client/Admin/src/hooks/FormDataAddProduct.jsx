@@ -14,8 +14,8 @@ const FormDataAddProduct = () => {
   const [messName, setMessName] = useState("");
   const formatVND = new Intl.NumberFormat("vi-VN", {
     currency: "VND",
-    style: "currency"
-  })
+    style: "currency",
+  });
 
   const checkNameProduct = () => {
     if (!name) {
@@ -129,8 +129,8 @@ const FormDataAddProduct = () => {
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
   const UrlApiGetAllCategories =
-    "http://localhost:8000/api/category/get-all-categories";
-  const urlApiGetAllBrands = "http://localhost:8000/api/brand/get-all-brands";
+    "http://localhost:8080/api/category/get-all-categories";
+  const urlApiGetAllBrands = "http://localhost:8080/api/brand/get-all-brands";
 
   useEffect(() => {
     const fetchData = async () => {
@@ -150,7 +150,7 @@ const FormDataAddProduct = () => {
 
   // Send to server
   const fetchApiPostCreateProduct =
-    "http://localhost:8000/api/product/add-product";
+    "http://localhost:8080/api/product/add-product";
 
   const myFormData = new FormData();
   myFormData.append("name", name);
@@ -415,7 +415,7 @@ const FormDataAddProduct = () => {
           </label>
           <div className="min-w-[80%] relative border border-gray-300 p-3 rounded-md">
             <div className="flex items-center justify-between gap-5 h-[50px]">
-              <ul className="w-[90%] flex items-center gap-5 overflow-hidden">
+              <ul className="w-[90%] flex items-center gap-5 overflow-x-auto pb-2">
                 {image?.map((item, index) => (
                   <li
                     key={index}

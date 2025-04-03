@@ -15,7 +15,7 @@ const Login = () => {
     Password: ""
   })
   // console.log(currentUser)
-  const fetchApiSignIn = `http://localhost:8000/api/auth/user/sign-in`
+  const fetchApiSignIn = `http://localhost:8080/api/auth/user/sign-in`
   const navigate = useNavigate()
 
   const handleChangeFormData = vail => {
@@ -49,8 +49,8 @@ const Login = () => {
   }
 
   return (
-    <div className="w-full h-[80vh] md:py-5 md:px-10 flex items-center justify-center">
-      <div className="2xl:w-[30%] lg:w-[40%] sm:w-[60%] w-[90%] p-10">
+    <div className="w-full h-[70vh] md:py-5 md:px-10 flex items-center justify-center">
+      <div className="2xl:w-[30%] lg:w-[40%] sm:w-[60%] w-[90%] p-10 bg-white rounded-md">
         {/* content title */}
         <div>
           <p className="text-[20px] font-[500] ">Chào mừng bạn ghé thăm</p>

@@ -10,18 +10,19 @@ import isSendMail from "../service/sendMail.js";
 // đăng ký , đăng nhập người dùng
 const SignUpByAccountUser = async (req, res) => {
   try {
-    const { lastName, firstName, phone, email, password } = req.body;
-
-    if (!lastName || !firstName || !phone || !email || !password)
+    const { lastName, firstName, phone, email, password, username, birthday, sex } = req.body;
+    if (!lastName || !firstName || !phone || !email || !password || !username || !birthday || !sex)
       return res.status(400).json("Vui lòng điển đẩy đủ thông tin.");
 
+    const existUsername = await userModel.findOne({ username });
+    if (existUsername) return res.status(400).json("Tên tài khoản đã tồn tại.");
     // Check email
     const reEmail = /^\S+@\S+\.\S+$/;
     if (!reEmail.test(email))
       return res.status(400).json("Email không hợp lệ.");
 
     const existEmail = await userModel.findOne({ email });
-    if (existEmail) return res.status(400).json("Email này đã tồn tại");
+    if (existEmail) return res.status(400).json("Email đã tồn tại.");
     // Check phone
     const reNumber = /^[0-9]+$/;
     if (!reNumber.test(phone))
@@ -33,10 +34,13 @@ const SignUpByAccountUser = async (req, res) => {
     const hashPassword = await bcrypt.hashSync(password, salt);
     const createUserDetail = new userDetailModel({
       phone,
+      birthday,
+      sex
     });
     const createUser = new userModel({
       lastName,
       firstName,
+      username,
       email,
       password: hashPassword,
       userDetailId: createUserDetail._id,
@@ -203,10 +207,10 @@ const SignOut = async (req, res) => {
 // lấy tất cả danh sách tài khoản
 const getAllUsers = async (req, res) => {
   try {
-    const users = await userModel.find();
+    const users = await userModel.find({}).populate("userDetailId");
     if (!users) return res.status(404).json("Không tìm thấy người dùng nào");
 
-    return res.status(200).json({ users: JSON.stringify(URLSearchParams) });
+    return res.status(200).json(users);
   } catch (error) {
     return res.status(500).json(error.message);
   }
@@ -215,10 +219,10 @@ const getAllUsers = async (req, res) => {
 const getUserById = async (req, res) => {
   try {
     const id = req.params.id;
-    const user = await userModel.findById(id);
+    const user = await userModel.findById(id).populate("userDetailId");
     if (!user) return res.status(404).json("Không tìm thấy người");
 
-    return res.status(200).json({ user: JSON.stringify(user) });
+    return res.status(200).json(user);
   } catch (error) {
     return res.status(500).json(error.message);
   }
@@ -343,6 +347,19 @@ const restPassword = async (req, res) => {
   }
 };
 
+const deleteUser = async (req, res) => {
+  try {
+    const id = req.params.id
+    const user = await userModel.findByIdAndDelete(id)
+    if(!user) 
+      return res.status(400).json("Không tìm thấy người dùng.")
+
+    return res.status(200).json("Xóa tài khoản người dùng thành công.")
+  } catch (error) {
+    return res.status(500).json(error.message)
+  }
+}
+
 export default {
   SignUpByAccountUser,
   SignInByAccountUser,
@@ -354,4 +371,5 @@ export default {
   SignOut,
   interOTP,
   restPassword,
+  deleteUser
 };

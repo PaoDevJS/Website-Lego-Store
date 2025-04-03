@@ -15,16 +15,15 @@ const Home = () => {
   const [index, setIndex] = useState(6)
   const { setSearchCategory } = useContext(AppContext)
   const fetchApiGetAllCategories =
-    "http://localhost:8000/api/category/get-all-categories";
+    "http://localhost:8080/api/category/get-all-categories";
   const fetchApiGetProductsAll =
-    "http://localhost:8000/api/product/get-all-products";
+    "http://localhost:8080/api/product/get-all-products";
   
   const isFetchApiGetAll = async () => {
     try {
       const [productsRes] = await Promise.all([
         axios.get(fetchApiGetProductsAll),
       ]);
-  
       setProducts(productsRes.data.products || []);
     } catch (error) {
       console.error("Lỗi lấy dữ liệu:", error.response?.data || error.message);
@@ -36,7 +35,7 @@ const Home = () => {
       const decoded = await axios.get(fetchApiGetAllCategories);
       setCategories(decoded.data.categories);
     } catch (error) {
-      console.log(error.response.data);
+      console.log(error.response?.data);
     }
   };
 
@@ -74,9 +73,8 @@ const Home = () => {
         <div className="grid grid-cols-12 gap-7 mt-7">
           {
             products.slice(0, 6).map((item, index) => {
-              console.log(`products hot ${index} >> `, item)
               return (
-                <div key={index} className="lg:col-span-2 col-span-6">
+                <div key={index} className="2xl:col-span-2 lg:col-span-3 col-span-6">
                   <Card props={item}/>
                 </div>
               )
@@ -92,7 +90,7 @@ const Home = () => {
           {
             products.slice(0, index).map((item, index) => {
               return (
-                <div key={index} className="lg:col-span-2 col-span-6">
+                <div key={index} className="2xl:col-span-2 lg:col-span-3 col-span-6">
                   <Card props={item}/>
                 </div>
               )

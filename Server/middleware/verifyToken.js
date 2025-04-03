@@ -13,7 +13,7 @@ export const verifyToken = async (req, res, next) => {
 
 export const verifyTokenAdmin = async (req, res, next) => {
     try {
-        const token = req.cookies.token;
+        const token = req.header('Authorization').split(" ")[1]
         //  Kiểm tra xem token có tồn tại không
         if(!token)
             return res.status(403).josn("Token không tồn tại. Vui lòng cung cấp token.")
@@ -22,7 +22,7 @@ export const verifyTokenAdmin = async (req, res, next) => {
         req.user = decoded.data;
         
         // Kiểm tra quyền admin
-        if (req.user.role !== "admin") {
+        if (req.user.role !== "Admin") {
             return res.status(403).json("Bạn không có quyền truy cập.");
         }
         req.user = decoded.data;

@@ -12,9 +12,9 @@ const ListCategories = () => {
   const [categories, setCategories] = useState([]);
   const [search, setSearch] = useState("");
   const UrlApiGetAllCategories =
-    "http://localhost:8000/api/category/get-all-categories";
+    "http://localhost:8080/api/category/get-all-categories";
   const UrlApiDeleteCategory =
-    "http://localhost:8000/api/category/delete-item-category";
+    "http://localhost:8080/api/category/delete-item-category";
   const FetchApiGetAllCategories = useCallback(async () => {
     try {
       const decode = await axios.get(UrlApiGetAllCategories);

@@ -13,7 +13,7 @@ const ForgetPassword = () => {
     e.preventDefault();
     try {
       const result = await axios.post(
-        "http://localhost:8000/api/auth/forget-password", { email });
+        "http://localhost:8080/api/auth/forget-password", { email });
         console.log(result)
         toast.success(result.data.message);
         localStorage.setItem("tokenTimeOtp", result.data.tokenTimeOtp)

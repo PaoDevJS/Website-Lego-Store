@@ -12,8 +12,8 @@ const UpdateCategory = () => {
   const [mess, setMess] = useState("");
   const navigate = useNavigate()
   const id = useLocation().pathname.split("/")[3]
-  const urlApiPostUpdateCategory = `http://localhost:8000/api/category/update-item-category/${id}`;
-  const urlApiPostGetItemCategory = `http://localhost:8000/api/category/get-item-category/`;
+  const urlApiPostUpdateCategory = `http://localhost:8080/api/category/update-item-category/${id}`;
+  const urlApiPostGetItemCategory = `http://localhost:8080/api/category/get-item-category/`;
 
   const UpdateCategory = useCallback(async () => {
     try {

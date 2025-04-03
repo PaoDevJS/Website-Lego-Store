@@ -23,7 +23,7 @@ const ProductDetail = () => {
   const path = useLocation().pathname;
   const id = path.split("/")[3];
   const urlApiGetItemProduct =
-    "http://localhost:8000/api/brand/get-item-product";
+    "http://localhost:8080/api/brand/get-item-product";
 
   useEffect(() => {
     const fetchData = async () => {
@@ -182,14 +182,14 @@ const ProductDetail = () => {
                       </label>
                       <div className="min-w-[80%] relative border border-gray-300 py-3 px-5 rounded-md">
                         <div className="flex items-center justify-between gap-5">
-                          <ul className="w-[90%] flex items-center gap-5 overflow-hidden">
+                          <ul className="w-[90%] flex items-center gap-5 overflow-x-auto pb-2">
                             {images?.map((item, index) => (
                               <li
                                 key={index}
                                 className="flex items-center gap-3 border border-gray-300 rounded-md p-2"
                               >
                                 <img
-                                  src={`http://localhost:8000/${item}`}
+                                  src={`http://localhost:8080/${item}`}
                                   alt=""
                                   className="min-w-[40px] h-[40px]"
                                 />

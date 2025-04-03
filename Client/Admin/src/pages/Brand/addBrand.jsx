@@ -10,7 +10,7 @@ const AddBrand = () => {
   const [name, setName] = useState("");
   const [err, setErr] = useState(false);
   const [mess, setMess] = useState("");
-  const urlApiPostCreateBrand = "http://localhost:8000/api/brand/add-brand";
+  const urlApiPostCreateBrand = "http://localhost:8080/api/brand/add-brand";
 
   const FetchApiPostCreateBrand = async () => {
     try {

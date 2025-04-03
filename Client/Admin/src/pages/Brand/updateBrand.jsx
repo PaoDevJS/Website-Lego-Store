@@ -10,8 +10,8 @@ const UpdateBrand = () => {
   const [name, setName] = useState("");
   const [err, setErr] = useState(false);
   const [mess, setMess] = useState("");
-  const urlApiUpdateItemBrand = "http://localhost:8000/api/brand/update-item-brand";
-  const urlApiGetItemBrand = "http://localhost:8000/api/brand/get-item-brand";
+  const urlApiUpdateItemBrand = "http://localhost:8080/api/brand/update-item-brand";
+  const urlApiGetItemBrand = "http://localhost:8080/api/brand/get-item-brand";
   const path = useLocation().pathname
   const id = path.split("/")[3]
   const navigate = useNavigate()

@@ -13,10 +13,12 @@ import CreateProduct from "../pages/product/createProduct"
 import UpdateCategory from "../pages/Category/updateCategory"
 import UpdateBrand from "../pages/Brand/updateBrand"
 import UpdateProduct from "../pages/product/updateProduct"
-import ListCustomers from "../pages/Customer/ListCustomers"
 import LayoutCustomer from "../layout/LayoutCustomer"
+import ListCustomer from "../pages/Customer/isListCustomer"
 import ProductDetail from "../pages/product/productDetail"
 import Dashboard from "../pages/Dashboard"
+import IsAddCustomer from "../pages/Customer/addCustomer"
+import InfoDetailOfCustomer from "../pages/Customer/infoDetailOfCustomer"
 
 const routes = createBrowserRouter([
     {
@@ -91,11 +93,16 @@ const routes = createBrowserRouter([
                 children: [
                     {
                         path: "/khach-hang/danh-sach-khach-hang",
-                        element: <ListCustomers />
+                        element: <ListCustomer />
                     },
                     {
-
-                    }
+                        path: "/khach-hang/them-khach-hang",
+                        element: <IsAddCustomer />
+                    },
+                    {
+                        path: "/khach-hang/thong-tin-chi-tiet-khach-hang/:id",
+                        element: <InfoDetailOfCustomer />
+                    },
                 ]
 
             },

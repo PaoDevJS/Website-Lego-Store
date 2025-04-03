@@ -11,8 +11,8 @@ const FormDataUpdateItemProduct = () => {
   const message = "Vui lòng không để trống trường này.";
   const formatVND = new Intl.NumberFormat("vi-VN", {
     style: "currency",
-    currency: "VND"
-  })
+    currency: "VND",
+  });
   // check name product
   const [name, setName] = useState("");
   const [errName, setErrName] = useState(false);
@@ -114,7 +114,7 @@ const FormDataUpdateItemProduct = () => {
   const handleRemoveItemImage = (key) => {
     setImage(image.filter((vail, index) => index != key));
   };
-  console.log(image)
+  console.log(image);
 
   const checkImageProduct = () => {
     if (image.length < 0) {
@@ -132,10 +132,10 @@ const FormDataUpdateItemProduct = () => {
   const [brands, setBrands] = useState([]);
   const path = useLocation().pathname;
   const id = path.split("/")[3];
-  const UrlApiGetAllCategories = `http://localhost:8000/api/category/get-all-categories`;
-  const urlApiGetAllBrands = "http://localhost:8000/api/brand/get-all-brands";
+  const UrlApiGetAllCategories = `http://localhost:8080/api/category/get-all-categories`;
+  const urlApiGetAllBrands = "http://localhost:8080/api/brand/get-all-brands";
   const urlApiGetItemProduct =
-    "http://localhost:8000/api/brand/get-item-product";
+    "http://localhost:8080/api/brand/get-item-product";
 
   useEffect(() => {
     const fetchData = async () => {
@@ -162,7 +162,7 @@ const FormDataUpdateItemProduct = () => {
     };
     fetchData();
   }, [id]);
-  console.log(image)
+  console.log(image);
 
   // Send to server
   const fetchApiPutItemProduct =
@@ -361,9 +361,7 @@ const FormDataUpdateItemProduct = () => {
               </div>
               <select
                 name="category"
-                onChange={(vail) =>
-                  setCategory(vail.target.value.trim())
-                }
+                onChange={(vail) => setCategory(vail.target.value.trim())}
                 id="category"
                 className="w-[30%] border border-gray-300 outline-none p-2 rounded-md"
               >
@@ -430,14 +428,16 @@ const FormDataUpdateItemProduct = () => {
           </label>
           <div className="min-w-[80%] relative border border-gray-300 py-3 px-5 rounded-md">
             <div className="flex items-center justify-between gap-5">
-              <ul className="w-[90%] flex items-center gap-5 overflow-hidden">
+              <ul className="w-[90%] flex items-center gap-5 overflow-x-auto pb-2">
                 {image?.map((item, index) => (
                   <li
                     key={index}
                     className="flex items-center gap-3 border border-gray-300 rounded-md p-2"
                   >
                     <img
-                      src={`${item === File? item : `http://localhost:8000/${item}`}`}
+                      src={`${
+                        item === File ? item : `http://localhost:8080/${item}`
+                      }`}
                       alt=""
                       className="min-w-[40px] h-[40px]"
                     />
@@ -459,7 +459,10 @@ const FormDataUpdateItemProduct = () => {
                   id="upload"
                   hidden
                   onChange={(vail) =>
-                    setImage((prev) => [...prev, URL.createObjectURL(vail.target.files[0])])
+                    setImage((prev) => [
+                      ...prev,
+                      URL.createObjectURL(vail.target.files[0]),
+                    ])
                   }
                 />
               </div>

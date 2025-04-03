@@ -41,10 +41,10 @@ const ProductDetail = () => {
   };
 
   const fetchAptGetItemProduct =
-    "http://localhost:8000/api/product/get-item-product";
+    "http://localhost:8080/api/product/get-item-product";
   const fetchApiGetProductsAll =
-    "http://localhost:8000/api/product/get-all-products";
-  const fetchApiCreateCart = "http://localhost:8000/api/cart/create-cart";
+    "http://localhost:8080/api/product/get-all-products";
+  const fetchApiCreateCart = "http://localhost:8080/api/cart/create-cart";
 
   const isFetchApiGetAll = async () => {
     try {
@@ -101,19 +101,19 @@ const ProductDetail = () => {
         <div>
           <div className="h-[500px] w-full 2xl:w-[800px] lg:w-[550px] rounded-md overflow-hidden bg-white p-5">
             {product.images && product.images.length > 0 ? (
-              <img src={`http://localhost:8000/${product.images[currentIndex]}`} alt="Product" className=" w-full object-fill"/>
+              <img src={`http://localhost:8080/${product.images[currentIndex]}`} alt="Product" className=" w-full object-fill"/>
             ) : (
               <p>Đang tải hình ảnh...</p>
             )}
           </div>
 
           <div className="w-full overflow-hidden">
-            <div className="flex items-center gap-7 mt-5">
+            <div className="flex items-center justify-center gap-7 mt-5">
               {
                 product.images?.map((item, index) => {
                   return (
                     <button onClick={() => setCurrentIndex(index)} key={index} className={`w-[100px] h-[100px] ${currentIndex === index ? "border rounded-md overflow-hidden p-1 border-red-400" : " border-none rounded-md overflow-hidden p-1"} `}>
-                      <img src={`http://localhost:8000/${item}`} alt="" className="w-full h-full object-cover"/>
+                      <img src={`http://localhost:8080/${item}`} alt="" className="w-full h-full object-cover"/>
                     </button>
                   )
                 })
@@ -196,36 +196,6 @@ const ProductDetail = () => {
                 </button>
               )}
             </div>
-          </div>
-          {/* info */}
-          <div className="mt-7">
-            <h1 className="text-[18px] font-[600] mb-3">Thông tin sản phẩm</h1>
-            <ul className="flex flex-col gap-[0.5px]">
-              <li className="flex items-center justify-between text-gray-700 border-gray-300 border">
-                <span className="border-r w-[50%] border-gray-300 py-2 px-4">
-                  Xuất xứ
-                </span>
-                <span className="w-[50%] border-gray-300 py-2 px-4">
-                  Trung Quốc
-                </span>
-              </li>
-              <li className="flex items-center justify-between text-gray-700 border-gray-300 border">
-                <span className="border-r w-[50%] border-gray-300 py-2 px-4">
-                  Thương hiệu
-                </span>
-                <span className="w-[50%] border-gray-300 py-2 px-4">
-                  {product.brands}
-                </span>
-              </li>
-              <li className="flex items-center justify-between text-gray-700 border-gray-300 border">
-                <span className="border-r w-[50%] border-gray-300 py-2 px-4">
-                  Giới tính
-                </span>
-                <span className="w-[50%] border-gray-300 py-2 px-4">
-                  Giới tính
-                </span>
-              </li>
-            </ul>
           </div>
         </div>
       </div>

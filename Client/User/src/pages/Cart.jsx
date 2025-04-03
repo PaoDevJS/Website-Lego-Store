@@ -11,7 +11,7 @@ import ListProductInCart from "../components/ListProductInCart";
 const Cart = () => {
   const { currentCart, setCurrentCart, currentUser } = useContext(AppContext);
   console.log(currentCart)
-  const fetchApiGetCartOfUser = "http://localhost:8000/api/cart/get-carts-all";
+  const fetchApiGetCartOfUser = "http://localhost:8080/api/cart/get-carts-all";
   
     const isFetchApiGetCartOfUser = useCallback(async () => {
       try {

@@ -8,7 +8,7 @@ import { useContext } from "react";
 import { FaShoppingCart, FaEye } from "react-icons/fa";
 
 const Card = ({ props }) => {
-  const fetchApiCreateCart = "http://localhost:8000/api/cart/create-cart";
+  const fetchApiCreateCart = "http://localhost:8080/api/cart/create-cart";
   const { currentUser } = useContext(AppContext);
 
   // Định dạng tiền tệ VND
@@ -34,7 +34,7 @@ const Card = ({ props }) => {
       {/* image */}
       <div className="h-[60%] w-full overflow-hidden relative cursor-pointer">
         <img
-          src={`http://localhost:8000/${props.images[0]}`}
+          src={`http://localhost:8080/${props.images[0]}`}
           alt=""
           className="object-cover w-full h-full"
         />

@@ -92,3 +92,55 @@ export const isDeleteItemProductInTheCart = async (req, res) => {
     return res.status(500).json(error.message)
   }
 }
+
+export const isGetItemProductInCart = async (req, res) => {
+  try {
+    const id = req.params.id
+    const userId = req.id
+
+    // Tìm giỏ hàng của user
+    const cart = await cartModel.findOne({ userId }).populate("products.productId")
+    if (!cart) {
+      return res.status(404).json("Giỏ hàng không tồn tại!");
+    }
+
+    // Tìm sản phẩm trong giỏ hàng
+    const productIndex = cart.products.filter(p => p._id.toString() === id)
+    if (!cart) {
+      return res.status(404).json("Sản phẩm không tồn tại!");
+    }
+
+    return res.status(200).json(productIndex)
+  } catch (error) {
+    return res.status(500).json(error.message)
+  }
+}
+
+export const isUpdateItemProduct = async (req, res) => {
+  try {
+    const id = req.params.id
+    const { stock, userId } = req.body
+
+    // Tìm giỏ hàng của user
+    const cart = await cartModel.findOne({ userId })
+    if (!cart) {
+      return res.status(404).json("Giỏ hàng không tồn tại!");
+    }
+
+    // Tìm sản phẩm trong giỏ hàng
+    const productIndex = cart.products.findIndex(p => p._id.toString() === id)
+
+    if (productIndex === -1) {
+      return res.status(404).json("Sản phẩm không tồn tại trong giỏ hàng!");
+    }
+
+    // Nếu đã có, cập nhật số lượng
+    cart.products[productIndex].quantity = stock;
+
+    await cart.save();
+    return res.status(200).json("Cập nhật số lượng sản phẩm trong giỏ hàng thành công!")
+    
+  } catch (error) {
+    return res.status(500).json(error.message)
+  }
+}

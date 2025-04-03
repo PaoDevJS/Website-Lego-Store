@@ -2,6 +2,7 @@ import { useCallback, useEffect, useContext } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { AppContext } from "../Context/ThemeContext";
+import UpdateCart from "../utils/updateCart"
 
 // react icons
 import { FaRegEdit } from "react-icons/fa";
@@ -12,42 +13,43 @@ const ListProductInCart = () => {
     style: "currency",
     currency: "VND",
   });
-  const { currentCart, setCurrentCart, currentUser, setOpenCart } = useContext(AppContext)
-    const fetchApiGetCartOfUser = "http://localhost:8000/api/cart/get-carts-all";
-  
-    const isFetchApiGetCartOfUser = useCallback(async () => {
-      try {
-        const result = await axios.get(fetchApiGetCartOfUser, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("tokenSignIN")}`,
-          },
-        });
-        setCurrentCart({
-          carts: result.data,
-          iscCart: true
-        });
-      } catch (error) {
-        console.log(error.response?.data);
-      }
-    }, [setCurrentCart])
-  
-    useEffect(() => {
-      isFetchApiGetCartOfUser();
-    }, []);
-  
+  const { currentCart, setCurrentCart, currentUser, setOpenCart, openCart } =
+    useContext(AppContext);
+  const fetchApiGetCartOfUser = "http://localhost:8080/api/cart/get-carts-all";
+
+  const isFetchApiGetCartOfUser = useCallback(async () => {
+    try {
+      const result = await axios.get(fetchApiGetCartOfUser, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("tokenSignIN")}`,
+        },
+      });
+      setCurrentCart({
+        carts: result.data,
+        iscCart: true,
+      });
+    } catch (error) {
+      console.log(error.response?.data);
+    }
+  }, [setCurrentCart]);
+
+  useEffect(() => {
+    isFetchApiGetCartOfUser();
+  }, []);
 
   const fetchApiDeleteItemInTheCart =
-    "http://localhost:8000/api/cart/delete-item-cart";
+    "http://localhost:8080/api/cart/delete-item-cart";
 
   const handleBtnDeleteItemInTheCart = useCallback(async (id) => {
     try {
-      const result = await axios.post(
-        `${fetchApiDeleteItemInTheCart}/${id}`, {userId: currentUser.user._id});
+      const result = await axios.post(`${fetchApiDeleteItemInTheCart}/${id}`, {
+        userId: currentUser.user._id,
+      });
       toast.success(result.data);
-      isFetchApiGetCartOfUser()
+      isFetchApiGetCartOfUser();
     } catch (error) {
       toast.error(error.response?.data);
-      console.log(error.response?.data)
+      console.log(error.response?.data);
     }
   }, []);
 
@@ -69,7 +71,7 @@ const ListProductInCart = () => {
               <td className="w-[45%] py-2 px-4">
                 <div className="flex gap-5">
                   <img
-                    src={`http://localhost:8000/${item.productId.images[0]}`}
+                    src={`http://localhost:8080/${item.productId.images[0]}`}
                     alt=""
                     className="w-20 h-20 rounded-md object-cover"
                   />
@@ -98,9 +100,23 @@ const ListProductInCart = () => {
               </td>
               <td className="w-[15%] py-2 px-4">
                 <div className="flex items-center justify-center gap-5">
-                  <button onClick={() => setOpenCart(true) } className="bg-green-300 cursor-pointer text-green-600 rounded-md p-2 hover:bg-green-600 hover:text-white">
-                    <FaRegEdit size={20} />
-                  </button>
+                  <div>
+                    <button
+                      onClick={() => setOpenCart({ isOpen: true, product: item._id})}
+                      className="bg-green-300 cursor-pointer text-green-600 rounded-md p-2 hover:bg-green-600 hover:text-white"
+                    >
+                      <FaRegEdit size={20} />
+                    </button>
+                    <div
+                      className={`${
+                        openCart.isOpen ? "fixed" : "hidden"
+                      } right-0 top-0 bottom-0 left-0`}
+                    >
+                      <div className="w-full h-full flex items-center justify-center">
+                        <UpdateCart />
+                      </div>
+                    </div>
+                  </div>
                   <button
                     onClick={() => handleBtnDeleteItemInTheCart(item._id)}
                     className="bg-red-300 cursor-pointer text-red-600 rounded-md p-2 hover:bg-red-600 hover:text-white"
