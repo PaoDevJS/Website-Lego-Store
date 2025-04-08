@@ -84,9 +84,6 @@ export const isDeleteItemProductInTheCart = async (req, res) => {
     // Cập nhật giỏ hàng
     await cart.save()
 
-    // Cập nhật giỏ hàng
-    await cart.save()
-
     return res.status(200).json("Xóa sản phẩm khỏi giỏ hàng thành công!" );
   } catch (error) {
     return res.status(500).json(error.message)

@@ -13,8 +13,13 @@ import LayoutProduct from "../Layouts/LayoutProduct";
 import ProductDetail from "../utils/productDetail";
 import Contact from "../pages/Contact";
 import AboutUs from "../pages/AboutUs";
-import LayoutProfile from "../Layouts/LayoutProfile";
 import AccountOfMe from "../pages/isProfile";
+import LayoutUser from "../Layouts/LayoutUser";
+import IsAddress from "../pages/isAddress";
+import CheckPassword from "../pages/Change-Password/CheckPassword";
+import LayoutChangePassword from "../Layouts/LayoutChangePassword";
+import ChangePassword from "../pages/Change-Password/ChangePassword";
+import LayoutOrder from "../Layouts/LayoutOrder";
 
 const router = createBrowserRouter([
   {
@@ -78,12 +83,37 @@ const router = createBrowserRouter([
         element: <AboutUs />,
       },
       {
-        path: "/profile",
-        element: <LayoutProfile />,
+        path: "/user",
+        element: <LayoutUser />,
         children: [
             {
-                path: "/profile/:id",
+                path: "/user/profile",
                 element: <AccountOfMe />
+            },
+            {
+                path: "/user/address",
+                element: <IsAddress />
+            },
+            {
+                path: "/user/verify",
+                element: <LayoutChangePassword />,
+                children: [
+                  {
+                    path: "/user/verify/check-password",
+                    element: <CheckPassword />
+                  },
+                  {
+                    path: "/user/verify/change-password",
+                    element: <ChangePassword />
+                  }
+                ]
+            },
+            {
+              path: "/user/order",
+              element: <LayoutOrder />,
+              children: [
+                
+              ]
             }
         ]
       },

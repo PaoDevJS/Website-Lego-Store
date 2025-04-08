@@ -95,11 +95,11 @@ const IsListCustomer = () => {
                 <tr key={index} className="even:bg-[#fdfdfd] odd:bg-[#e7e7e9]">
                   <td className="py-3 px-5 text-center">#{index + 1}</td>
                   <td className="py-3 px-5 text-center">
-                    {/* <img
-                      // src={`http://localhost:8080/${item.userDetailId?.image}`}
+                    <img
+                      src={item.userDetailId?.image}
                       alt=""
                       className="w-[70px] h-[70px] object-cover m-auto rounded-md"
-                    /> */}
+                    />
                   </td>
                   <td className="py-3 px-5 text-center">{item.firstName + " " + item.lastName}</td>
                   <td className="py-3 px-5 text-center">{item.email}</td>
@@ -112,7 +112,7 @@ const IsListCustomer = () => {
                           <FaRegEye size={20} />
                         </button>
                       </Link>
-                      <Link to={`/san-pham/cap-nhat-san-pham/`}>
+                      <Link to={`/khach-hang/cap-nhat-thong-tin-khach-hang/${item._id}`}>
                         <button className="rounded p-1 bg-green-300 text-green-600 cursor-pointer hover:text-white hover:bg-green-600 transition-all duration-300 ease-in">
                           <FaEdit size={20} />
                         </button>

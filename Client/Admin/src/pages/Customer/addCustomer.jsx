@@ -23,6 +23,7 @@ const IsAddCustomer = () => {
     setDataForm(prev => ({...prev, [vail.target.name]: vail.target.value}))
   }
 
+
   const isPostCreateCustomer = async () => {
     try {
       const result = await axios.post(fetchApiCreateCustomer, dataForm)
@@ -118,8 +119,8 @@ const IsAddCustomer = () => {
                 <label className="min-w-[20%] font-[600] text-gray-500">Giới tính:</label>
                 <div className="flex items-center justify-around w-[40%]">
                   <div className="flex items-center gap-3">
-                    <input type="radio" name="sex" id="nam" value={"Name"} onChange={handleChangeFormData}/>
-                    <label htmlFor="nam" className="text-[16px] cursor-pointer text-gray-600">Name</label>
+                    <input type="radio" name="sex" id="nam" value={"Nam"} onChange={handleChangeFormData}/>
+                    <label htmlFor="nam" className="text-[16px] cursor-pointer text-gray-600">Nam</label>
                   </div>
                   <div className="flex items-center gap-3">
                     <input type="radio" name="sex" id="nu" value={"Nữ"} onChange={handleChangeFormData}/>

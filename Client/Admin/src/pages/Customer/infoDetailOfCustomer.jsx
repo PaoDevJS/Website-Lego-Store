@@ -72,10 +72,10 @@ const InfoDetailOfCustomer = () => {
                     <label className="min-w-[20%] font-[600] text-gray-500">Giới tính:</label>
                     <p className="w-[80%] py-3 px-5 border border-gray-300 rounded-md outline-none">{user?.userDetailId?.sex}</p>
                 </div>
-                <div className="mt-5 flex items-center">
+                {/* <div className="mt-5 flex items-center">
                     <label className="min-w-[20%] font-[600] text-gray-500">Địa chỉ:</label>
                     <p className="w-[80%] py-3 px-5 border border-gray-300 rounded-md outline-none">{user?.userDetailId?.sex}</p>
-                </div>
+                </div> */}
               </form>
             </div>
           </div>

@@ -70,7 +70,7 @@ const Navbar = () => {
             <Link to={"/contact"}>
               <li className={`text-[18px] font-[600] hover:bg-[#e7e7e9] hover:text-red-600 py-2 px-4 rounded-md ${path === "contact"? "text-red-600" : "text-black"}`}>Liên hệ</li>
             </Link>
-            <Link to={`/profile/${currentUser.user._id}`}>
+            <Link to={`/user/profile`}>
               <li className={`${currentUser.isUser === false ? "hidden" : "block"} text-[18px] font-[600] hover:bg-[#e7e7e9] hover:text-red-600 py-2 px-4 rounded-md`}>Tài khoản của tôi</li>
             </Link>
           </ul>

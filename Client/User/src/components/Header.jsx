@@ -94,8 +94,11 @@ const Header = () => {
                   className="w-[30px] h-[30px] rounded-full cursor-pointer"
                 />
                 <div className="absolute right-[-40px] top-[40px] before:absolute before:w-full before:h-[10px] before:top-[-10px] before:right-0 shadow-lg p-3 rounded-md z-50 bg-white text-center flex-col gap-3 hidden group-hover:flex">
-                  <Link to={`/profile/${currentUser.user._id}`}>
+                  <Link to={`/user/profile`}>
                     <h3 className="min-w-[150px] hover:bg-red-400 hover:text-white p-2 rounded-md font-[600]">Tài khoản của tôi</h3>
+                  </Link>
+                  <Link to={`/user/order`}>
+                    <h3 className="min-w-[150px] hover:bg-red-400 hover:text-white p-2 rounded-md font-[600]">Đơn mua</h3>
                   </Link>
                   <button onClick={handleSubmitLogOut} className="min-w-[150px] hover:bg-red-400 hover:text-white p-2 rounded-md font-[600]">Đăng xuất</button>
                 </div>

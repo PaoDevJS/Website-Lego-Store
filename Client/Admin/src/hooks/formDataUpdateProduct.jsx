@@ -166,7 +166,7 @@ const FormDataUpdateItemProduct = () => {
 
   // Send to server
   const fetchApiPutItemProduct =
-    "http://localhost:8000/api/product/update-item-product";
+    "http://localhost:8080/api/product/update-item-product";
   const navigate = useNavigate();
   const myFormData = new FormData();
   myFormData.append("name", name);
@@ -188,10 +188,11 @@ const FormDataUpdateItemProduct = () => {
       navigate("/san-pham/danh-sach-san-pham");
       toast.success(decode.data);
     } catch (error) {
-      const err = error.response.data;
-      if (err.message === "Vui lòng không để trống trường này.") return true;
+      const err = error.response?.data;
+      console.log(err)
+      if (err === "Vui lòng không để trống trường này.") return true;
 
-      toast.error(err.message);
+      toast.error(err);
     }
   };
 

@@ -1,5 +1,6 @@
 import authController from "../controller/authController.js";
 import { verifyTokenAdmin, verifyToken, verifyTimeOtp } from "../middleware/verifyToken.js";
+import uploadFile from "../middleware/multer.js";
 
 const authRouter = (main, route) => {
     // user

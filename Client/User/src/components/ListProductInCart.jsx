@@ -110,7 +110,7 @@ const ListProductInCart = () => {
                     <div
                       className={`${
                         openCart.isOpen ? "fixed" : "hidden"
-                      } right-0 top-0 bottom-0 left-0`}
+                      } right-0 top-0 bottom-0 bg-black/20 left-0`}
                     >
                       <div className="w-full h-full flex items-center justify-center">
                         <UpdateCart />

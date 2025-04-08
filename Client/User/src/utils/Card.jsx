@@ -56,7 +56,7 @@ const Card = ({ props }) => {
       {/* info */}
       <div className="mt-3">
         <h3 className="truncate">{props.name}</h3>
-        <p className="mt-3 text-[18px] text-red-600">
+        <p className="mt-3 text-[20px] text-red-600 font-[600]">
           {formatVND.format(props.price)}
         </p>
       </div>

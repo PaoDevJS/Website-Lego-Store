@@ -18,7 +18,11 @@ const ThemeContext = ({ children }) => {
   });
   const [openCart, setOpenCart] = useState({
     isOpen: false,
-    product: {}
+    product: ""
+  });
+  const [openAddress, setOpenAddress] = useState({
+    isOpen: false,
+    address: ""
   });
 
   return (
@@ -40,6 +44,7 @@ const ThemeContext = ({ children }) => {
         setCurrentCart,
         openCart,
         setOpenCart,
+        openAddress, setOpenAddress,
       }}
     >
       {children}

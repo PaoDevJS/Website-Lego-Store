@@ -5,7 +5,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 // React Icons
-import { FaPlus, FaEdit, FaRegEye } from "react-icons/fa";
+import { FaPlus, FaEdit, FaRegEye, FaAngleDoubleRight, FaAngleDoubleLeft } from "react-icons/fa";
 import { BsBox2HeartFill } from "react-icons/bs";
 import { MdDelete } from "react-icons/md";
 import { FaSearch } from "react-icons/fa";
@@ -13,6 +13,8 @@ import { FaSearch } from "react-icons/fa";
 const ListProducts = () => {
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1)
+  const [count, setCount] = useState(0)
   const fetchApiGetAllProducts =
     "http://localhost:8080/api/product/get-all-products";
   const fetchApiDeleteItemProduct =
@@ -21,6 +23,21 @@ const ListProducts = () => {
     currency: "VND",
     style: "currency",
   });
+
+
+  const handlePrevPage = () => {
+    if(page <= 1) {
+      return
+    }
+
+    setCount(p => p - 10)
+    setPage(p => p - 1)
+  }
+
+  const handleNextPage = () => {
+    setCount(p => p + 10)
+    setPage(p => p + 1)
+  }
 
   const getAllProducts = useCallback(async () => {
     try {
@@ -102,10 +119,10 @@ const ListProducts = () => {
                   vail.name.toLowerCase().includes(search.toLowerCase()) ||
                   vail.brands.toLowerCase().includes(search.toLowerCase()) ||
                   vail.categories.toLowerCase().includes(search.toLowerCase())
-              )
+              ).slice(count, 10 * page)
               .map((item, index) => (
                 <tr key={index} className="even:bg-[#fdfdfd] odd:bg-[#e7e7e9]">
-                  <td className="py-3 px-5 text-center">#{index + 1}</td>
+                  <td className="py-3 px-5 text-center">#{index + count + 1}</td>
                   <td className="py-3 px-5 text-center">
                     <img
                       src={`http://localhost:8080/${item.images[0]}`}
@@ -143,6 +160,15 @@ const ListProducts = () => {
               ))}
           </tbody>
         </table>
+        <div className="flex items-center gap-5 justify-end mt-5">
+            <button onClick={handlePrevPage} className="text-gray-400 cursor-pointer hover:text-black transition-all duration-200 ease-in">
+              <FaAngleDoubleLeft size={20} />
+            </button>
+            <h3 className="border border-gray-300 w-[70px] py-2 text-center rounded-md">{page}</h3>
+            <button onClick={handleNextPage} className="text-gray-400 cursor-pointer hover:text-black transition-all duration-200 ease-in">
+              <FaAngleDoubleRight size={20} />
+            </button>
+        </div>
       </div>
     </div>
   );

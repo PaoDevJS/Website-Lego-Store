@@ -19,6 +19,7 @@ import ProductDetail from "../pages/product/productDetail"
 import Dashboard from "../pages/Dashboard"
 import IsAddCustomer from "../pages/Customer/addCustomer"
 import InfoDetailOfCustomer from "../pages/Customer/infoDetailOfCustomer"
+import UpdateCustomer from "../pages/Customer/updateCustomer"
 
 const routes = createBrowserRouter([
     {
@@ -102,6 +103,10 @@ const routes = createBrowserRouter([
                     {
                         path: "/khach-hang/thong-tin-chi-tiet-khach-hang/:id",
                         element: <InfoDetailOfCustomer />
+                    },
+                    {
+                        path: "/khach-hang/cap-nhat-thong-tin-khach-hang/:id",
+                        element: <UpdateCustomer />
                     },
                 ]
 
