@@ -6,6 +6,7 @@ import productRouter from "./product.router.js";
 import { cartRouter } from "./cart.router.js";
 import { userRouter } from "./user.router.js";
 import { addressRouter } from "./address.router.js";
+import { orderRouter } from "./order.router.js";
 
 const route = express.Router()
 
@@ -17,6 +18,7 @@ const router = (main) => {
     cartRouter(main, route)
     userRouter(main, route)
     addressRouter(main, route)
+    orderRouter(main, route)
 }
 
 export default router;

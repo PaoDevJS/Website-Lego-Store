@@ -99,21 +99,21 @@ const ProductDetail = () => {
       <div className="flex lg:justify-between gap-7 lg:flex-row flex-col">
         {/* left --> images */}
         <div>
-          <div className="h-[500px] w-full 2xl:w-[800px] lg:w-[550px] rounded-md overflow-hidden bg-white p-5">
+          <div className="h-[500px] w-full 2xl:w-[800px] lg:w-[550px] rounded-md overflow-hidden bg-white p-7 shadow-lg shadow-gray-400 border border-gray-300">
             {product.images && product.images.length > 0 ? (
-              <img src={`http://localhost:8080/${product.images[currentIndex]}`} alt="Product" className=" w-full object-fill"/>
+              <img src={`http://localhost:8080/${product.images[currentIndex]}`} alt="Product" className="w-full h-full rounded-md"/>
             ) : (
               <p>Đang tải hình ảnh...</p>
             )}
           </div>
 
-          <div className="w-full overflow-hidden">
-            <div className="flex items-center justify-center gap-7 mt-5">
+          <div className="w-full overflow-hidden mt-7 py-4 px-7">
+            <div className="flex items-center justify-center gap-7">
               {
                 product.images?.map((item, index) => {
                   return (
-                    <button onClick={() => setCurrentIndex(index)} key={index} className={`w-[100px] h-[100px] ${currentIndex === index ? "border rounded-md overflow-hidden p-1 border-red-400" : " border-none rounded-md overflow-hidden p-1"} `}>
-                      <img src={`http://localhost:8080/${item}`} alt="" className="w-full h-full object-cover"/>
+                    <button onClick={() => setCurrentIndex(index)} key={index} className={`w-[100px] h-[100px] ${currentIndex === index ? "border-2 rounded-md overflow-hidden p-2 border-gray-400" : " border-none rounded-md overflow-hidden p-2"}`}>
+                      <img src={`http://localhost:8080/${item}`} alt="" className="w-full h-full object-cover rounded-md"/>
                     </button>
                   )
                 })
@@ -123,12 +123,12 @@ const ProductDetail = () => {
         </div>
 
         {/* right --> info product */}
-        <div className="2xl:w-[600px] lg:w-[400px] w-full p-4 rounded-md bg-white">
+        <div className="2xl:w-[600px] lg:w-[400px] w-full max-h-full py-5 px-10 rounded-md bg-white">
           <div>
             {/* title */}
             <div>
               <h1 className="text-[22px] font-[600]">{product.name}</h1>
-              <h3 className="text-[22px] text-red-600 my-5 font-[600]">
+              <h3 className="text-[25px] text-red-600 my-5 font-[700]">
                 {formatVND.format(product.price)}
               </h3>
             </div>

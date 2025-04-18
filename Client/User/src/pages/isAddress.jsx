@@ -120,7 +120,7 @@ const IsAddress = () => {
                   <div className="mt-5">
                     <textarea
                       name="address"
-                      placeholder="Nhập địa chỉ gừi nhận"
+                      placeholder="Nhập địa chỉ người nhận"
                       id=""
                       value={formData.address}
                         onChange={handleChangeFormData}

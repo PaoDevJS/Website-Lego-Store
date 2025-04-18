@@ -1,23 +1,21 @@
 import { useState, useContext, useEffect } from "react";
 import { AppContext } from "../Context/ThemeContext";
-import axios from "axios"
+import axios from "axios";
 import { toast } from "react-toastify";
 
-import {
-    FaPlus,
-    FaMinus
-  } from "react-icons/fa";
+import { FaPlus, FaMinus } from "react-icons/fa";
 
 const UpdateCart = () => {
   const [stock, setStock] = useState(1);
-  const [product, setProduct] = useState({})
-  const { setOpenCart, openCart, currentUser, setCurrentCart } = useContext(AppContext)
-    /* btn giảm số lượng */
+  const [product, setProduct] = useState({});
+  const { setOpenCart, openCart, currentUser, setCurrentCart } =
+    useContext(AppContext);
+  /* btn giảm số lượng */
   const handleBtnMinus = () => {
     if (stock <= 1) return; // Không giảm nhỏ hơn 1
     setStock((prev) => prev - 1);
   };
-    /* btn tăng số lượng */
+  /* btn tăng số lượng */
   const handleBtnPlus = (stock) => {
     setStock((prev) => prev + stock);
   };
@@ -37,28 +35,33 @@ const UpdateCart = () => {
     } catch (error) {
       console.log(error.response?.data);
     }
-  }
+  };
 
   useEffect(() => {
     isFetchApiGetCartOfUser();
   }, []);
 
-  const fetchApiGetItemProductInCart = "http://localhost:8080/api/cart/get-item-cart"
-  const fetchApiUpdateItemProductInCart = "http://localhost:8080/api/cart/update-item-cart"
+  const fetchApiGetItemProductInCart =
+    "http://localhost:8080/api/cart/get-item-cart";
+  const fetchApiUpdateItemProductInCart =
+    "http://localhost:8080/api/cart/update-item-cart";
 
   const isFetchData = async () => {
     try {
-      const result = await axios.get(`${fetchApiGetItemProductInCart}/${openCart?.product}`, {
-        headers: {
-          "Authorization": `Bearer ${localStorage.getItem("tokenSignIN")}`
+      const result = await axios.get(
+        `${fetchApiGetItemProductInCart}/${openCart?.product}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("tokenSignIN")}`,
+          },
         }
-      })
+      );
       setProduct(result.data[0]);
       setStock(result.data[0].quantity || 1);
     } catch (error) {
-      console.log(error.response?.data)
+      console.log(error.response?.data);
     }
-  }
+  };
 
   useEffect(() => {
     if (openCart?.product) {
@@ -67,14 +70,17 @@ const UpdateCart = () => {
   }, [openCart]);
   const handleBtnIsUpdateCart = async () => {
     try {
-      const result = await axios.post(`${fetchApiUpdateItemProductInCart}/${openCart?.product}`, { stock, userId: currentUser.user._id })
-      setOpenCart({isOpen: false, product: ""})
-      isFetchApiGetCartOfUser()
-      toast.success(result.data)
+      const result = await axios.post(
+        `${fetchApiUpdateItemProductInCart}/${openCart?.product}`,
+        { stock, userId: currentUser.user._id }
+      );
+      setOpenCart({ isOpen: false, product: "" });
+      isFetchApiGetCartOfUser();
+      toast.success(result.data);
     } catch (error) {
-      toast.error(error.response?.data)
+      toast.error(error.response?.data);
     }
-  }
+  };
   return (
     <div className="lg:w-[30%] w-[50%] min-h-[50%] bg-white rounded-md py-5 px-7 shadow-lg shadow-gray-300">
       <div>
@@ -112,8 +118,18 @@ const UpdateCart = () => {
           </div>
         </div>
         <div className="flex justify-center gap-5 mt-10">
-            <button onClick={() => setOpenCart({isOpen: false, product: ""})} className="py-2 px-5 text-[16px] font-[600] cursor-pointer text-white rounded-md bg-gray-600">Quay lại</button> 
-            <button onClick={handleBtnIsUpdateCart} className="py-2 px-5 text-[16px] font-[600] cursor-pointer text-white rounded-md bg-red-600">Cập nhật</button>  
+          <button
+            onClick={() => setOpenCart({ isOpen: false, product: "" })}
+            className="py-2 px-5 text-[16px] font-[600] cursor-pointer text-white rounded-md bg-gray-600"
+          >
+            Quay lại
+          </button>
+          <button
+            onClick={handleBtnIsUpdateCart}
+            className="py-2 px-5 text-[16px] font-[600] cursor-pointer text-white rounded-md bg-red-600"
+          >
+            Cập nhật
+          </button>
         </div>
       </div>
     </div>

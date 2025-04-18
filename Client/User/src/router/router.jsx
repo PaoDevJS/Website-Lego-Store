@@ -20,6 +20,7 @@ import CheckPassword from "../pages/Change-Password/CheckPassword";
 import LayoutChangePassword from "../Layouts/LayoutChangePassword";
 import ChangePassword from "../pages/Change-Password/ChangePassword";
 import LayoutOrder from "../Layouts/LayoutOrder";
+import CheckOutPayment from "../components/checkoutPayment";
 
 const router = createBrowserRouter([
   {
@@ -59,6 +60,10 @@ const router = createBrowserRouter([
       {
         path: "/cart",
         element: <Cart />,
+      },
+      {
+        path: "/order-checkout",
+        element: <CheckOutPayment />,
       },
       {
         path: "/product",

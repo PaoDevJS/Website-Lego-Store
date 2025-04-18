@@ -1,39 +1,33 @@
-import { useCallback, useEffect, useContext } from "react";
-import axios from "axios";
+import { useContext, useState, useEffect } from "react";
 import { AppContext } from "../Context/ThemeContext";
-import { Link } from "react-router-dom"
-import cart from "../assets/images/cart.webp"
+import { Link } from "react-router-dom";
 
 // react icons
-import { FaAngleRight } from "react-icons/fa";
-import ListProductInCart from "../components/ListProductInCart";
+import ListProductInCart from "../components/listProductToCarts";
 
 const Cart = () => {
-  const { currentCart, setCurrentCart, currentUser } = useContext(AppContext);
-  const fetchApiGetCartOfUser = "http://localhost:8080/api/cart/get-carts-all";
+  const [totalAmount, setTotalAmount] = useState(null);
+  const { currentCart } = useContext(AppContext);
+
+  const formatMoney = new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  });
   
-    const isFetchApiGetCartOfUser = useCallback(async () => {
-      try {
-        const result = await axios.get(fetchApiGetCartOfUser, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("tokenSignIN")}`,
-          },
-        });
-        setCurrentCart({
-          carts: result.data,
-          iscCart: true
-        });
-      } catch (error) {
-        console.log(error.response?.data);
-      }
-    }, [setCurrentCart])
-  
-    useEffect(() => {
-      if(currentUser.isUser === true) {
-        isFetchApiGetCartOfUser();
-      }
-    }, []);
-    
+  useEffect(() => {
+    const isTolaAmount = () => {
+      console.log("carts", currentCart)
+      const prices =
+        currentCart?.products.map((item) => {
+          return item.productId.price * item.quantity;
+        }) || [];
+
+      const amount = prices.reduce((a, b) => a + b, 0);
+      setTotalAmount(amount);
+    };
+
+      isTolaAmount();
+  }, [currentCart]);
   return (
     <div className="p-10">
       <div className="container m-auto">
@@ -44,47 +38,47 @@ const Cart = () => {
               <h1 className="text-xl font-bold uppercase">Giỏ hàng</h1>
               {
                 <p className="py-1 border-b text-[16px] text-gray-600 border-gray-400">
-                  ({currentCart.carts?.length || 0}) Sản phẩm
+                  ({currentCart?.products || 0}) Sản phẩm
                 </p>
               }
             </div>
             <div className="m-4">
-              {currentCart.carts && currentCart.carts.length > 0 ? (
-                <ListProductInCart />
-              ) : (
-                <div className="lg:h-[50vh] flex items-center justify-center flex-col gap-4">
-                  <img src={cart} alt="" className="w-[200px] h-[200px]" />
-                  <h3 className="font-[600] text-[18px] leading-5">
-                    Hiện giỏ hàng của bạn không có sản phẩm nào!
-                  </h3>
-                  <p className="text-gray-500">
-                    Về trang cửa hàng để chọn mua sản phẩm bạn nhé!!
-                  </p>
-                  <button className="py-3 px-4 hover:bg-black border rounded-md text-[16px] font-[500] hover:text-white transition duration-150 ease-in-out">
-                    <Link to={"/"}>Mua sắm ngày</Link>
-                  </button>
-                </div>
-              )}
+              <ListProductInCart />
             </div>
           </div>
-
           {/* Thông tin đơn hàng */}
-          <div className="lg:w-[33%] h-[30%] shadow-md shadow-gray-300 p-4 rounded-md bg-white">
+          <div className="lg:w-[33%] h-[30%] shadow-md shadow-gray-300 p-5 rounded-md bg-white">
             <div className="pb-2 border-b border-gray-300">
-              <h1 className="text-[1.3125rem] font-[600]">
-                Thông tin đơn hàng
+              <h1 className="text-[1.3125rem] font-[600] uppercase">
+                Cộng giỏ hàng
               </h1>
             </div>
-            <div className="flex items-center justify-between p-3 border-b border-gray-300">
-              <h1 className="font-[500]">Thông tin người nhận hàng</h1>
-              <button className="flex items-center">
-                Xem thông tin
-                <FaAngleRight size={18} />
-              </button>
+            <div className="p-5 border-b border-gray-300">
+              <div className="flex items-center justify-between">
+                <h3 className="text-gray-500 font-[600] text-[16px]">
+                  Tạm tính ( {currentCart?.products || 0} sản phẩm )
+                </h3>
+                <p className="text-gray-500 font-[600] text-[16px]">
+                  {formatMoney.format(totalAmount || 0)}
+                </p>
+              </div>
+              <div className="flex items-center justify-between mt-3">
+                <h3 className="text-gray-500 font-[600] text-[16px]">
+                  Tổng cộng
+                </h3>
+                <p className="text-gray-500 font-[600] text-[16px]">
+                  {formatMoney.format(totalAmount || 0)}
+                </p>
+              </div>
             </div>
 
-            <div>
-              <button></button>
+            <div className="mt-5">
+              <Link
+                to={`/order-checkout`}
+                className="w-[80%] bg-red-600 text-white block m-auto py-3 text-[18px] font-[700] uppercase rounded-md hover:opacity-80 cursor-pointer transition-all duration-300 ease-linear text-center"
+              >
+                Mua hàng
+              </Link>
             </div>
           </div>
         </div>

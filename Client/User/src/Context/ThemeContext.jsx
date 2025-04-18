@@ -12,14 +12,12 @@ const ThemeContext = ({ children }) => {
   const [searchCategory, setSearchCategory] = useState("");
   const [searchBrand, setSearchBrand] = useState("");
   const [email, setEmail] = useState("");
-  const [currentCart, setCurrentCart] = useState({
-    carts: [],
-    isCart: false,
-  });
+  const [currentCart, setCurrentCart] = useState([]);
   const [openCart, setOpenCart] = useState({
     isOpen: false,
     product: ""
   });
+
   const [openAddress, setOpenAddress] = useState({
     isOpen: false,
     address: ""
