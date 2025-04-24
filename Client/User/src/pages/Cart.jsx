@@ -1,33 +1,57 @@
-import { useContext, useState, useEffect } from "react";
-import { AppContext } from "../Context/ThemeContext";
+import { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
-
-// react icons
+import { useSelector, useDispatch } from "react-redux";
+import { listCart, startCart } from "../redux/slice/cartSlice";
+import axios from "axios";
 import ListProductInCart from "../components/listProductToCarts";
+import { AppContext } from "../Context/ThemeContext";
 
 const Cart = () => {
+  const dispatch = useDispatch();
+  const cart = useSelector((state) => state.Cart);
   const [totalAmount, setTotalAmount] = useState(null);
-  const { currentCart } = useContext(AppContext);
-
+  const { openCart } = useContext(AppContext);
   const formatMoney = new Intl.NumberFormat("vi-VN", {
     style: "currency",
     currency: "VND",
   });
-  
+
+  const fetchApiGetCartOfUser = "http://localhost:8080/api/cart/get-carts-all";
+
+  const isFetchApiGetCartOfUser = async () => {
+    try {
+      const result = await axios.get(fetchApiGetCartOfUser, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("tokenSignIN")}`,
+        },
+      });
+      dispatch(listCart(result.data));
+    } catch (error) {
+      console.log(error.response?.data);
+    }
+  };
+
+  const isTolaAmount = () => {
+    const prices =
+      cart?.carts?.products?.map((item) => {
+        return item.productId.price * item.quantity;
+      }) || [];
+
+    const amount = prices.reduce((a, b) => a + b, 0);
+    setTotalAmount(amount);
+  };
+
   useEffect(() => {
-    const isTolaAmount = () => {
-      console.log("carts", currentCart)
-      const prices =
-        currentCart?.products.map((item) => {
-          return item.productId.price * item.quantity;
-        }) || [];
+    if(localStorage.getItem("tokenSignIN")) {
+      isFetchApiGetCartOfUser();
+      dispatch(startCart())
+    }
+  }, [openCart?.product]);
 
-      const amount = prices.reduce((a, b) => a + b, 0);
-      setTotalAmount(amount);
-    };
+  useEffect(() => {
+    isTolaAmount()
+  }, [cart?.carts?.products]);
 
-      isTolaAmount();
-  }, [currentCart]);
   return (
     <div className="p-10">
       <div className="container m-auto">
@@ -38,7 +62,7 @@ const Cart = () => {
               <h1 className="text-xl font-bold uppercase">Giỏ hàng</h1>
               {
                 <p className="py-1 border-b text-[16px] text-gray-600 border-gray-400">
-                  ({currentCart?.products || 0}) Sản phẩm
+                  ({cart?.carts?.products?.length || 0}) Sản phẩm
                 </p>
               }
             </div>
@@ -56,7 +80,7 @@ const Cart = () => {
             <div className="p-5 border-b border-gray-300">
               <div className="flex items-center justify-between">
                 <h3 className="text-gray-500 font-[600] text-[16px]">
-                  Tạm tính ( {currentCart?.products || 0} sản phẩm )
+                  Tạm tính ( {cart?.carts?.products?.length || 0} sản phẩm )
                 </h3>
                 <p className="text-gray-500 font-[600] text-[16px]">
                   {formatMoney.format(totalAmount || 0)}
@@ -73,12 +97,18 @@ const Cart = () => {
             </div>
 
             <div className="mt-5">
-              <Link
-                to={`/order-checkout`}
-                className="w-[80%] bg-red-600 text-white block m-auto py-3 text-[18px] font-[700] uppercase rounded-md hover:opacity-80 cursor-pointer transition-all duration-300 ease-linear text-center"
-              >
-                Mua hàng
-              </Link>
+              {cart?.carts?.products?.length > 0 ? (
+                <Link
+                  to={`/order-checkout?amount=${totalAmount}&&order=${cart?.carts._id}`}
+                  className="w-[80%] bg-red-600 text-white block m-auto py-3 text-[18px] font-[700] uppercase rounded-md hover:opacity-80 cursor-pointer transition-all duration-300 ease-linear text-center"
+                >
+                  Mua hàng
+                </Link>
+              ) : (
+                <button className="w-[80%] bg-red-600 text-white block m-auto py-3 text-[18px] font-[700] uppercase rounded-md hover:opacity-80 cursor-pointer transition-all duration-300 ease-linear text-center">
+                  Mua hàng
+                </button>
+              )}
             </div>
           </div>
         </div>

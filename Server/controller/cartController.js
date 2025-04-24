@@ -54,7 +54,8 @@ export const isCreateCart = async (req, res) => {
 
 export const isGetCartAll = async (req, res) => {
   try {
-    const carts = await cartModel.findOne({ userId: req.id}).populate("products.productId")
+    console.log(req.id)
+    const carts = await cartModel.findOne({ userId: req.id }).populate("products.productId")
     return res.status(200).json(carts)
   } catch (error) {
     return res.status(500).json(error.message)

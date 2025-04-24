@@ -19,27 +19,6 @@ const UpdateCart = () => {
   const handleBtnPlus = (stock) => {
     setStock((prev) => prev + stock);
   };
-  const fetchApiGetCartOfUser = "http://localhost:8080/api/cart/get-carts-all";
-
-  const isFetchApiGetCartOfUser = async () => {
-    try {
-      const result = await axios.get(fetchApiGetCartOfUser, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("tokenSignIN")}`,
-        },
-      });
-      setCurrentCart({
-        carts: result.data,
-        iscCart: true,
-      });
-    } catch (error) {
-      console.log(error.response?.data);
-    }
-  };
-
-  useEffect(() => {
-    isFetchApiGetCartOfUser();
-  }, []);
 
   const fetchApiGetItemProductInCart =
     "http://localhost:8080/api/cart/get-item-cart";
@@ -75,7 +54,6 @@ const UpdateCart = () => {
         { stock, userId: currentUser.user._id }
       );
       setOpenCart({ isOpen: false, product: "" });
-      isFetchApiGetCartOfUser();
       toast.success(result.data);
     } catch (error) {
       toast.error(error.response?.data);

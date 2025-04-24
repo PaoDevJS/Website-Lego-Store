@@ -1,42 +1,24 @@
-import { useCallback, useEffect, useContext } from "react";
+import { useCallback, useContext } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { AppContext } from "../Context/ThemeContext";
 import UpdateCart from "../utils/updateCart";
 import cart from "../assets/images/cart.webp";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux"
 
 // react icons
 import { FaRegEdit } from "react-icons/fa";
-import { MdDelete, MdIndeterminateCheckBox } from "react-icons/md";
+import { MdDelete } from "react-icons/md";
 
 const ListProductInCart = () => {
+  const data = useSelector(state => state.Cart)
   const formatVND = new Intl.NumberFormat("vi-VN", {
     style: "currency",
     currency: "VND",
   });
-  const { currentCart, setCurrentCart, currentUser, setOpenCart, openCart } =
+  const { currentUser, setOpenCart, openCart } =
     useContext(AppContext);
-  const fetchApiGetCartOfUser = "http://localhost:8080/api/cart/get-carts-all";
-
-  const isFetchApiGetCartOfUser = async () => {
-    try {
-      const result = await axios.get(fetchApiGetCartOfUser, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("tokenSignIN")}`,
-        },
-      });
-      setCurrentCart(result.data);
-      console.log("c-a-r-t-s >> ", result.data)
-    } catch (error) {
-      console.log(error.response?.data);
-    }
-  };
-  
-  useEffect(() => {
-    isFetchApiGetCartOfUser();
-    console.log("CARTS >> ", currentCart)
-  }, []);
 
   const fetchApiDeleteItemInTheCart =
     "http://localhost:8080/api/cart/delete-item-cart";
@@ -47,7 +29,6 @@ const ListProductInCart = () => {
         userId: currentUser.user._id,
       });
       toast.success(result.data);
-      isFetchApiGetCartOfUser();
     } catch (error) {
       toast.error(error.response?.data);
       console.log(error.response?.data);
@@ -56,7 +37,7 @@ const ListProductInCart = () => {
 
   return (
     <>
-      {currentCart?.products && currentCart?.products.length > 0 ? (
+      {data?.carts?.products && data?.carts?.products?.length > 0 ? (
         <div className="w-full max-h-[70vh] mt-7 rounded-md overflow-hidden">
           <table className="table-fixed w-full">
             <thead>
@@ -69,24 +50,24 @@ const ListProductInCart = () => {
               </tr>
             </thead>
             <tbody>
-              {currentCart?.products.map((item, index) => (
+              {data?.carts?.products?.map((item, index) => (
                 <tr key={index} className="even:bg-[#fdfdfd] odd:bg-[#e7e7e9]">
                   <td className="w-[45%] py-2 px-4">
                     <div className="flex gap-5">
                       <img
-                        src={`http://localhost:8080/${item.images[0]}`}
+                        src={`http://localhost:8080/${item.productId.images[0]}`}
                         alt=""
                         className="w-20 h-20 rounded-md object-cover"
                       />
                       <div>
-                        <h3 className="">{item.name}</h3>
+                        <h3 className="">{item.productId.name}</h3>
                         <p></p>
                       </div>
                     </div>
                   </td>
                   <td className="w-[15%] py-2 px-4">
                     <p className="text-red-500 font-[500] flex justify-center whitespace-normal items-center gap-1">
-                      {formatVND.format(MdIndeterminateCheckBox.price)}
+                      {formatVND.format(item.productId.price)}
                     </p>
                   </td>
                   <td className="w-[10%] py-2 px-4 text-center">

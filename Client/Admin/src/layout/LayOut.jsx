@@ -14,7 +14,7 @@ const LayOut = () => {
                 {/* TopBar */}
                 <TopBar />
             </div>
-            <div className="w-full h-[85%]">
+            <div className="w-full h-[90%]">
                 {/* OutLet */}
                 <Outlet />
             </div>

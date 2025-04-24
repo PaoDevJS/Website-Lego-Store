@@ -21,6 +21,8 @@ import LayoutChangePassword from "../Layouts/LayoutChangePassword";
 import ChangePassword from "../pages/Change-Password/ChangePassword";
 import LayoutOrder from "../Layouts/LayoutOrder";
 import CheckOutPayment from "../components/checkoutPayment";
+import PaymentSuccess from "../pages/PaymentSuccess";
+import ListOrder from "../components/ListOrder";
 
 const router = createBrowserRouter([
   {
@@ -64,6 +66,10 @@ const router = createBrowserRouter([
       {
         path: "/order-checkout",
         element: <CheckOutPayment />,
+      },
+      {
+        path: "/payment-success",
+        element: <PaymentSuccess />,
       },
       {
         path: "/product",
@@ -115,10 +121,7 @@ const router = createBrowserRouter([
             },
             {
               path: "/user/order",
-              element: <LayoutOrder />,
-              children: [
-                
-              ]
+              element: <ListOrder />
             }
         ]
       },

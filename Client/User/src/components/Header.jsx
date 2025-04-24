@@ -5,6 +5,8 @@ import { AppContext } from "../Context/ThemeContext";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify"
+import { listCart } from "../redux/slice/cartSlice";
+import { useDispatch } from "react-redux";
 
 // React icons
 import { FaUser, FaSearch, FaShopify } from "react-icons/fa";
@@ -14,7 +16,7 @@ import Search from "./Search";
 
 const Header = () => {
   const { setOpenMenu, setSearch, currentUser,setCurrentUser } = useContext(AppContext);
-
+  const dispatch = useDispatch()
   const navigate = useNavigate()
   const fetchApiLogOut = "http://localhost:8080/api/auth/sign-out"
 
@@ -27,6 +29,7 @@ const Header = () => {
         user: {},
         isUser: false
       })
+      dispatch(listCart([]))
       toast.success(decoded.data)
     } catch (error) {
       console.log(error.response.data)

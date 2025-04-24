@@ -20,6 +20,9 @@ import Dashboard from "../pages/Dashboard"
 import IsAddCustomer from "../pages/Customer/addCustomer"
 import InfoDetailOfCustomer from "../pages/Customer/infoDetailOfCustomer"
 import UpdateCustomer from "../pages/Customer/updateCustomer"
+import LayoutOrder from "../layout/LayoutOrder"
+import { elements } from "chart.js"
+import ListOrders from "../pages/order/listOrders"
 
 const routes = createBrowserRouter([
     {
@@ -110,6 +113,32 @@ const routes = createBrowserRouter([
                     },
                 ]
 
+            },
+            {
+                path: "/don-hang", 
+                element: <LayoutOrder />,
+                children: [
+                    {
+                        path: "/don-hang/danh-sach-don-hang",
+                        element: <ListOrders />
+                    },
+                    {
+                        path: "/don-hang/don-hang-cho-xu-ly",
+                        element: <ListOrders />
+                    },
+                    {
+                        path: "/don-hang/don-hang-van-chuyen",
+                        element: <ListOrders />
+                    },
+                    {
+                        path: "/don-hang/don-hang-hoan-thanh",
+                        element: <ListOrders />
+                    },
+                    {
+                        path: "/don-hang/don-hang-da-huy",
+                        element: <ListOrders />
+                    },
+                ]
             },
             {
                 path: "/login",

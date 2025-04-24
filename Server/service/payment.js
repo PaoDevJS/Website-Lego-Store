@@ -5,16 +5,16 @@ import crypto from "crypto"
 
 
 // Thanh toán
-export const isPayment = async (res, amount, orderId, cartId) => {
+export const isPayment = async (res, totalAmount, orderId, cartId) => {
   //https://developers.momo.vn/#/docs/en/aiov2/?id=payment-method
   //parameters
   const accessKey = process.env.accessKey;
   const secretKey = process.env.secretKey;
   const partnerCode = "MOMO";
-  const redirectUrl = "http://chatgpt.com/c/67ff3b69-dc60-8010-8db5-c82854d1900c";
-  const ipnUrl = "https://49d1-2405-4803-fbb4-8080-912-e982-ddc8-f55d.ngrok-free.app/api/order/payment/momo-ipn";
+  const redirectUrl = "http://localhost:5173/payment-success";
+  const ipnUrl = "https://124f-42-113-158-131.ngrok-free.app/api/order/payment/momo-ipn";
   const requestType = "payWithMethod";
-  var amount = amount ;
+  var amount = totalAmount ;
   var orderId = orderId;
   const orderInfo = `Thanh toán đơn hàng #${orderId}`;
   const requestId = orderId;
@@ -108,9 +108,8 @@ export const isHandleIpn = async (req, res) => {
     console.log("Thanh toán thành công")
     await orderModel.findByIdAndUpdate(orderId, { payment: "Thanh toán thành công", transId })
     const order = await orderModel.findById(orderId).populate("products")
-    console.log("order >>", order)
-    const cart = await cartModel.findById(order.cartId)
-    console.log("CartId >>", cart)
+    console.log(order)
+    await cartModel.findByIdAndDelete(order.cartId)
   } else {
     console.log("Thanh toán thất bại")
     await orderModel.findByIdAndUpdate(orderId, { payment: "Thanh toán thất bại" })
